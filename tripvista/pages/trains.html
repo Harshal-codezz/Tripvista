@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Train Search Results — TripVista</title>
+  <meta name="description" content="Search and book IRCTC train tickets on TripVista. Tatkal, premium quota availability. Live PNR status and instant e-tickets." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .page-header {
+      background: linear-gradient(135deg, #1B5E20, #2E7D32);
+      color: #fff; padding: 100px 0 48px;
+    }
+    .page-header h1 { font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 8px; }
+    .page-header p { color: rgba(255,255,255,0.8); }
+    .breadcrumb { display: flex; gap: 8px; font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 16px; }
+    .breadcrumb a { color: rgba(255,255,255,0.8); }
+    .breadcrumb a:hover { color: #fff; }
+
+    .results-layout {
+      display: grid; grid-template-columns: 280px 1fr; gap: 24px; padding: 40px 0 80px;
+    }
+    .filters {
+      background: #fff; border-radius: var(--radius-lg); padding: 24px;
+      box-shadow: var(--card-shadow); height: fit-content; position: sticky; top: 90px;
+    }
+    .filters h3 { font-size: 1.1rem; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--bg-alt); }
+    .filter-group { margin-bottom: 24px; }
+    .filter-group h4 { font-size: 0.88rem; font-weight: 600; color: var(--dark); margin-bottom: 12px; }
+    .filter-group label {
+      display: flex; align-items: center; gap: 8px; padding: 6px 0;
+      font-size: 0.88rem; color: #555; cursor: pointer;
+    }
+    .filter-group input[type="checkbox"] { accent-color: #2E7D32; width: 16px; height: 16px; }
+
+    .results-list { display: flex; flex-direction: column; gap: 16px; }
+
+    .sort-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .sort-btn {
+      padding: 8px 20px; border-radius: var(--radius-full); border: 1px solid var(--bg-alt);
+      background: #fff; font-family: var(--font-body); font-size: 0.85rem;
+      cursor: pointer; transition: var(--transition-fast); color: #666;
+    }
+    .sort-btn:hover, .sort-btn.active { background: #2E7D32; color: #fff; border-color: #2E7D32; }
+
+    .train-card {
+      background: #fff; border-radius: var(--radius-lg); padding: 24px;
+      box-shadow: var(--card-shadow); display: grid;
+      grid-template-columns: 1.2fr 2fr 1fr; gap: 20px; align-items: center;
+      transition: var(--transition); border-left: 4px solid transparent;
+    }
+    .train-card:hover { border-left-color: #2E7D32; box-shadow: var(--card-shadow-hover); transform: translateY(-2px); }
+
+    .train-info { display: flex; flex-direction: column; gap: 4px; }
+    .train-name { font-weight: 700; font-size: 1rem; color: var(--dark); }
+    .train-number { font-size: 0.78rem; color: #888; }
+    .train-type {
+      display: inline-block; padding: 2px 10px; border-radius: var(--radius-full);
+      font-size: 0.72rem; font-weight: 600; margin-top: 4px; width: fit-content;
+    }
+    .train-type--sf { background: #E8F5E9; color: #2E7D32; }
+    .train-type--raj { background: #FFF3E0; color: #E65100; }
+    .train-type--exp { background: #E3F2FD; color: #1565C0; }
+    .train-type--shatabdi { background: #FCE4EC; color: #C62828; }
+
+    .journey-info {
+      display: flex; align-items: center; gap: 16px; justify-content: center;
+    }
+    .time-block { text-align: center; }
+    .time { font-size: 1.3rem; font-weight: 700; font-family: var(--font-head); }
+    .station-code { font-size: 0.78rem; color: #888; }
+    .train-path {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .train-path .duration { font-size: 0.75rem; color: #2E7D32; font-weight: 600; }
+    .train-path .line {
+      width: 100%; height: 2px; background: var(--bg-alt); position: relative;
+    }
+    .train-path .line::after {
+      content: '🚂'; position: absolute; right: -4px; top: -10px; font-size: 0.9rem;
+    }
+    .train-path .stops { font-size: 0.72rem; color: #888; }
+
+    .availability-block { text-align: right; display: flex; flex-direction: column; gap: 6px; }
+    .availability-block .price {
+      font-size: 1.4rem; font-weight: 700; color: #2E7D32; font-family: var(--font-head);
+    }
+    .availability-block small { font-size: 0.78rem; color: #888; }
+    .seat-avail {
+      font-size: 0.75rem; padding: 3px 8px; border-radius: var(--radius-sm);
+      font-weight: 600; display: inline-block; width: fit-content; margin-left: auto;
+    }
+    .seat-avail--available { background: #E8F5E9; color: #2E7D32; }
+    .seat-avail--rac { background: #FFF8E1; color: #F57F17; }
+    .seat-avail--wl { background: #FFEBEE; color: #C62828; }
+
+    .classes-row {
+      grid-column: 1 / -1; display: flex; gap: 8px; flex-wrap: wrap;
+      padding-top: 12px; border-top: 1px solid var(--bg-alt);
+    }
+    .class-chip {
+      padding: 6px 14px; border-radius: var(--radius-full); font-size: 0.78rem;
+      border: 1px solid var(--bg-alt); cursor: pointer; transition: var(--transition-fast);
+      background: #fff; color: #555;
+    }
+    .class-chip:hover, .class-chip.active { background: #2E7D32; color: #fff; border-color: #2E7D32; }
+
+    @media (max-width: 1024px) { .results-layout { grid-template-columns: 1fr; } .filters { position: static; } }
+    @media (max-width: 768px) {
+      .train-card { grid-template-columns: 1fr; gap: 16px; text-align: center; }
+      .availability-block { text-align: center; align-items: center; }
+      .journey-info { flex-direction: column; }
+      .classes-row { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <header id="navbar" class="navbar scrolled">
+    <div class="container navbar__inner">
+      <a href="../index.html" class="navbar__logo" style="color: var(--dark);">
+        <i class="fa-solid fa-plane-departure" style="color: var(--primary);"></i>
+        <span>Trip<span class="logo-highlight">Vista</span></span>
+      </a>
+      <nav class="navbar__links">
+        <a href="../index.html#hero" class="nav-link" data-tab="flights">Flights</a>
+        <a href="../index.html#hero" class="nav-link" data-tab="hotels">Hotels</a>
+        <a href="../index.html#hero" class="nav-link active" data-tab="trains">Trains</a>
+        <a href="../index.html#hero" class="nav-link" data-tab="buses">Buses</a>
+        <a href="../index.html#destinations" class="nav-link">Holiday Packages</a>
+        <a href="../index.html#deals" class="nav-link">Deals</a>
+      </nav>
+      <div class="navbar__actions">
+        <button class="btn btn-outline" style="color: var(--primary); border-color: var(--primary);">Sign In</button>
+        <button class="btn btn-primary">Sign Up</button>
+      </div>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Toggle Menu"><span style="background:var(--dark)"></span><span style="background:var(--dark)"></span><span style="background:var(--dark)"></span></button>
+    </div>
+  </header>
+
+  <section class="page-header">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a> <span>/</span> <span>Train Search Results</span>
+      </div>
+      <h1><i class="fa-solid fa-train" style="margin-right: 10px;"></i>Trains: New Delhi → Mumbai</h1>
+      <p>Showing 6 trains for Sat, 25 Mar 2026 • All Classes</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="results-layout">
+      <aside class="filters">
+        <h3><i class="fa-solid fa-filter"></i> Filters</h3>
+        <div class="filter-group">
+          <h4>Train Type</h4>
+          <label><input type="checkbox" checked /> Superfast</label>
+          <label><input type="checkbox" checked /> Rajdhani</label>
+          <label><input type="checkbox" checked /> Shatabdi</label>
+          <label><input type="checkbox" checked /> Express</label>
+          <label><input type="checkbox" /> Duronto</label>
+        </div>
+        <div class="filter-group">
+          <h4>Class</h4>
+          <label><input type="checkbox" checked /> AC First Class (1A)</label>
+          <label><input type="checkbox" checked /> AC 2 Tier (2A)</label>
+          <label><input type="checkbox" checked /> AC 3 Tier (3A)</label>
+          <label><input type="checkbox" checked /> Sleeper (SL)</label>
+          <label><input type="checkbox" /> General (GN)</label>
+        </div>
+        <div class="filter-group">
+          <h4>Departure Time</h4>
+          <label><input type="checkbox" checked /> Morning (6am–12pm)</label>
+          <label><input type="checkbox" checked /> Afternoon (12pm–6pm)</label>
+          <label><input type="checkbox" /> Evening (6pm–12am)</label>
+          <label><input type="checkbox" /> Night (12am–6am)</label>
+        </div>
+        <div class="filter-group">
+          <h4>Availability</h4>
+          <label><input type="checkbox" checked /> Available</label>
+          <label><input type="checkbox" /> RAC</label>
+          <label><input type="checkbox" /> Waitlist</label>
+        </div>
+      </aside>
+
+      <div>
+        <div class="sort-bar">
+          <button class="sort-btn active">Departure</button>
+          <button class="sort-btn">Duration</button>
+          <button class="sort-btn">Price (Low)</button>
+          <button class="sort-btn">Availability</button>
+        </div>
+
+        <div class="results-list">
+          <!-- Train 1 -->
+          <div class="train-card">
+            <div class="train-info">
+              <span class="train-name">Rajdhani Express</span>
+              <span class="train-number">12952 • Runs Daily</span>
+              <span class="train-type train-type--raj">Rajdhani</span>
+            </div>
+            <div class="journey-info">
+              <div class="time-block">
+                <div class="time">16:55</div>
+                <div class="station-code">NDLS</div>
+              </div>
+              <div class="train-path">
+                <span class="duration">15h 40m</span>
+                <div class="line"></div>
+                <span class="stops">4 Stops</span>
+              </div>
+              <div class="time-block">
+                <div class="time">08:35</div>
+                <div class="station-code">BCT</div>
+              </div>
+            </div>
+            <div class="availability-block">
+              <div class="price">₹1,875</div>
+              <small>AC 3 Tier</small>
+              <span class="seat-avail seat-avail--available">AVL 42</span>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+            <div class="classes-row">
+              <span class="class-chip active">3A — ₹1,875</span>
+              <span class="class-chip">2A — ₹2,635</span>
+              <span class="class-chip">1A — ₹4,470</span>
+            </div>
+          </div>
+
+          <!-- Train 2 -->
+          <div class="train-card">
+            <div class="train-info">
+              <span class="train-name">Mumbai Rajdhani</span>
+              <span class="train-number">12954 • Runs Daily</span>
+              <span class="train-type train-type--raj">Rajdhani</span>
+            </div>
+            <div class="journey-info">
+              <div class="time-block">
+                <div class="time">16:25</div>
+                <div class="station-code">NDLS</div>
+              </div>
+              <div class="train-path">
+                <span class="duration">16h 10m</span>
+                <div class="line"></div>
+                <span class="stops">5 Stops</span>
+              </div>
+              <div class="time-block">
+                <div class="time">08:35</div>
+                <div class="station-code">MMCT</div>
+              </div>
+            </div>
+            <div class="availability-block">
+              <div class="price">₹1,925</div>
+              <small>AC 3 Tier</small>
+              <span class="seat-avail seat-avail--rac">RAC 8</span>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+            <div class="classes-row">
+              <span class="class-chip active">3A — ₹1,925</span>
+              <span class="class-chip">2A — ₹2,720</span>
+              <span class="class-chip">1A — ₹4,595</span>
+            </div>
+          </div>
+
+          <!-- Train 3 -->
+          <div class="train-card">
+            <div class="train-info">
+              <span class="train-name">Garib Rath Express</span>
+              <span class="train-number">12909 • Tue, Thu, Sun</span>
+              <span class="train-type train-type--sf">Superfast</span>
+            </div>
+            <div class="journey-info">
+              <div class="time-block">
+                <div class="time">14:40</div>
+                <div class="station-code">NZM</div>
+              </div>
+              <div class="train-path">
+                <span class="duration">17h 50m</span>
+                <div class="line"></div>
+                <span class="stops">6 Stops</span>
+              </div>
+              <div class="time-block">
+                <div class="time">08:30</div>
+                <div class="station-code">BCT</div>
+              </div>
+            </div>
+            <div class="availability-block">
+              <div class="price">₹895</div>
+              <small>AC 3 Tier</small>
+              <span class="seat-avail seat-avail--available">AVL 118</span>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+            <div class="classes-row">
+              <span class="class-chip active">3A — ₹895</span>
+            </div>
+          </div>
+
+          <!-- Train 4 -->
+          <div class="train-card">
+            <div class="train-info">
+              <span class="train-name">Golden Temple Mail</span>
+              <span class="train-number">12904 • Runs Daily</span>
+              <span class="train-type train-type--exp">Express</span>
+            </div>
+            <div class="journey-info">
+              <div class="time-block">
+                <div class="time">21:25</div>
+                <div class="station-code">NDLS</div>
+              </div>
+              <div class="train-path">
+                <span class="duration">19h 15m</span>
+                <div class="line"></div>
+                <span class="stops">11 Stops</span>
+              </div>
+              <div class="time-block">
+                <div class="time">16:40</div>
+                <div class="station-code">MMCT</div>
+              </div>
+            </div>
+            <div class="availability-block">
+              <div class="price">₹545</div>
+              <small>Sleeper</small>
+              <span class="seat-avail seat-avail--wl">WL 23</span>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+            <div class="classes-row">
+              <span class="class-chip">SL — ₹545</span>
+              <span class="class-chip active">3A — ₹1,440</span>
+              <span class="class-chip">2A — ₹2,065</span>
+              <span class="class-chip">1A — ₹3,490</span>
+            </div>
+          </div>
+
+          <!-- Train 5 -->
+          <div class="train-card">
+            <div class="train-info">
+              <span class="train-name">August Kranti Rajdhani</span>
+              <span class="train-number">12954 • Runs Daily</span>
+              <span class="train-type train-type--raj">Rajdhani</span>
+            </div>
+            <div class="journey-info">
+              <div class="time-block">
+                <div class="time">17:40</div>
+                <div class="station-code">NZM</div>
+              </div>
+              <div class="train-path">
+                <span class="duration">16h 55m</span>
+                <div class="line"></div>
+                <span class="stops">6 Stops</span>
+              </div>
+              <div class="time-block">
+                <div class="time">10:35</div>
+                <div class="station-code">BCT</div>
+              </div>
+            </div>
+            <div class="availability-block">
+              <div class="price">₹1,955</div>
+              <small>AC 3 Tier</small>
+              <span class="seat-avail seat-avail--available">AVL 15</span>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+            <div class="classes-row">
+              <span class="class-chip active">3A — ₹1,955</span>
+              <span class="class-chip">2A — ₹2,780</span>
+              <span class="class-chip">1A — ₹4,650</span>
+            </div>
+          </div>
+
+          <!-- Train 6 -->
+          <div class="train-card">
+            <div class="train-info">
+              <span class="train-name">Punjab Mail</span>
+              <span class="train-number">12138 • Runs Daily</span>
+              <span class="train-type train-type--exp">Express</span>
+            </div>
+            <div class="journey-info">
+              <div class="time-block">
+                <div class="time">19:15</div>
+                <div class="station-code">NDLS</div>
+              </div>
+              <div class="train-path">
+                <span class="duration">22h 20m</span>
+                <div class="line"></div>
+                <span class="stops">14 Stops</span>
+              </div>
+              <div class="time-block">
+                <div class="time">17:35</div>
+                <div class="station-code">CSMT</div>
+              </div>
+            </div>
+            <div class="availability-block">
+              <div class="price">₹480</div>
+              <small>Sleeper</small>
+              <span class="seat-avail seat-avail--available">AVL 85</span>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+            <div class="classes-row">
+              <span class="class-chip active">SL — ₹480</span>
+              <span class="class-chip">3A — ₹1,290</span>
+              <span class="class-chip">2A — ₹1,855</span>
+              <span class="class-chip">1A — ₹3,120</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer__bottom">
+      <div class="container">
+        <p>&copy; 2025 TripVista. All rights reserved. Made with ❤️ in India</p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" id="scrollTopBtn" aria-label="Scroll to top"><i class="fa-solid fa-arrow-up"></i></button>
+  <script src="../js/main.js"></script>
+</body>
+</html>

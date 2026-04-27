@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flight Search Results — TripVista</title>
+  <meta name="description" content="Search and compare cheap flights across 500+ routes. Book domestic and international flights at best prices on TripVista." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    /* Page-specific styles for flight results */
+    .page-header {
+      background: linear-gradient(135deg, var(--primary), #0D47A1);
+      color: #fff;
+      padding: 100px 0 48px;
+    }
+    .page-header h1 { font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 8px; }
+    .page-header p { color: rgba(255,255,255,0.8); }
+    .breadcrumb { display: flex; gap: 8px; font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 16px; }
+    .breadcrumb a { color: rgba(255,255,255,0.8); }
+    .breadcrumb a:hover { color: #fff; }
+
+    .results-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 24px;
+      padding: 40px 0 80px;
+    }
+
+    /* Filters sidebar */
+    .filters {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--card-shadow);
+      height: fit-content;
+      position: sticky;
+      top: 90px;
+    }
+    .filters h3 { font-size: 1.1rem; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--bg-alt); }
+    .filter-group { margin-bottom: 24px; }
+    .filter-group h4 { font-size: 0.88rem; font-weight: 600; color: var(--dark); margin-bottom: 12px; }
+    .filter-group label {
+      display: flex; align-items: center; gap: 8px; padding: 6px 0;
+      font-size: 0.88rem; color: #555; cursor: pointer;
+    }
+    .filter-group input[type="checkbox"] { accent-color: var(--primary); width: 16px; height: 16px; }
+    .price-range { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #666; }
+    .price-range input[type="range"] { flex: 1; accent-color: var(--primary); }
+
+    /* Flight result cards */
+    .results-list { display: flex; flex-direction: column; gap: 16px; }
+    .result-card {
+      background: #fff; border-radius: var(--radius-lg); padding: 24px;
+      box-shadow: var(--card-shadow); display: grid;
+      grid-template-columns: 1fr 2fr 1fr; gap: 20px; align-items: center;
+      transition: var(--transition); border-left: 4px solid transparent;
+    }
+    .result-card:hover { border-left-color: var(--primary); box-shadow: var(--card-shadow-hover); transform: translateY(-2px); }
+
+    .airline-info { display: flex; flex-direction: column; gap: 4px; }
+    .airline-name { font-weight: 600; font-size: 0.95rem; }
+    .flight-number { font-size: 0.78rem; color: #888; }
+
+    .flight-info {
+      display: flex; align-items: center; gap: 16px; justify-content: center;
+    }
+    .time-block { text-align: center; }
+    .time { font-size: 1.3rem; font-weight: 700; font-family: var(--font-head); }
+    .city-code { font-size: 0.78rem; color: #888; }
+    .flight-path {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative;
+    }
+    .flight-path .duration { font-size: 0.75rem; color: var(--primary); font-weight: 600; }
+    .flight-path .line {
+      width: 100%; height: 2px; background: var(--bg-alt); position: relative;
+    }
+    .flight-path .line::after {
+      content: '✈'; position: absolute; right: -4px; top: -10px; font-size: 0.9rem; color: var(--primary);
+    }
+    .flight-path .stops { font-size: 0.72rem; color: var(--success); }
+
+    .price-block { text-align: right; display: flex; flex-direction: column; gap: 8px; }
+    .price-block .price { font-size: 1.5rem; font-weight: 700; color: var(--primary); font-family: var(--font-head); }
+    .price-block small { font-size: 0.78rem; color: #888; }
+
+    .sort-bar {
+      display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .sort-btn {
+      padding: 8px 20px; border-radius: var(--radius-full); border: 1px solid var(--bg-alt);
+      background: #fff; font-family: var(--font-body); font-size: 0.85rem;
+      cursor: pointer; transition: var(--transition-fast); color: #666;
+    }
+    .sort-btn:hover, .sort-btn.active {
+      background: var(--primary); color: #fff; border-color: var(--primary);
+    }
+
+    @media (max-width: 1024px) {
+      .results-layout { grid-template-columns: 1fr; }
+      .filters { position: static; }
+    }
+    @media (max-width: 768px) {
+      .result-card { grid-template-columns: 1fr; gap: 16px; text-align: center; }
+      .price-block { text-align: center; }
+      .flight-info { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <header id="navbar" class="navbar scrolled">
+    <div class="container navbar__inner">
+      <a href="../index.html" class="navbar__logo" style="color: var(--dark);">
+        <i class="fa-solid fa-plane-departure" style="color: var(--primary);"></i>
+        <span>Trip<span class="logo-highlight">Vista</span></span>
+      </a>
+      <nav class="navbar__links">
+        <a href="../index.html#hero" class="nav-link active">Flights</a>
+        <a href="../index.html#hero" class="nav-link">Hotels</a>
+        <a href="../index.html#hero" class="nav-link">Trains</a>
+        <a href="../index.html#hero" class="nav-link">Buses</a>
+        <a href="../index.html#destinations" class="nav-link">Holiday Packages</a>
+        <a href="../index.html#deals" class="nav-link">Deals</a>
+      </nav>
+      <div class="navbar__actions">
+        <button class="btn btn-outline" style="color: var(--primary); border-color: var(--primary);">Sign In</button>
+        <button class="btn btn-primary">Sign Up</button>
+      </div>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Toggle Menu"><span style="background:var(--dark)"></span><span style="background:var(--dark)"></span><span style="background:var(--dark)"></span></button>
+    </div>
+  </header>
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a> <span>/</span> <span>Flight Search Results</span>
+      </div>
+      <h1>Flights: Delhi → Mumbai</h1>
+      <p>Showing 6 best flights for Sat, 25 Mar 2026 • 1 Adult, Economy</p>
+    </div>
+  </section>
+
+  <!-- Results -->
+  <div class="container">
+    <div class="results-layout">
+      <!-- Sidebar Filters -->
+      <aside class="filters">
+        <h3><i class="fa-solid fa-filter"></i> Filters</h3>
+
+        <div class="filter-group">
+          <h4>Price Range</h4>
+          <div class="price-range">
+            <span>₹1,500</span>
+            <input type="range" min="1500" max="10000" value="8000" />
+            <span>₹10,000</span>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <h4>Airlines</h4>
+          <label><input type="checkbox" checked /> IndiGo</label>
+          <label><input type="checkbox" checked /> Air India</label>
+          <label><input type="checkbox" checked /> Vistara</label>
+          <label><input type="checkbox" checked /> SpiceJet</label>
+          <label><input type="checkbox" checked /> AirAsia India</label>
+        </div>
+
+        <div class="filter-group">
+          <h4>Stops</h4>
+          <label><input type="checkbox" checked /> Non-Stop</label>
+          <label><input type="checkbox" checked /> 1 Stop</label>
+        </div>
+
+        <div class="filter-group">
+          <h4>Departure Time</h4>
+          <label><input type="checkbox" /> Morning (6am-12pm)</label>
+          <label><input type="checkbox" checked /> Afternoon (12pm-6pm)</label>
+          <label><input type="checkbox" /> Evening (6pm-12am)</label>
+        </div>
+      </aside>
+
+      <!-- Results List -->
+      <div>
+        <div class="sort-bar">
+          <button class="sort-btn active">Cheapest</button>
+          <button class="sort-btn">Fastest</button>
+          <button class="sort-btn">Earliest</button>
+          <button class="sort-btn">Best Value</button>
+        </div>
+
+        <div class="results-list">
+          <!-- Result 1 -->
+          <div class="result-card">
+            <div class="airline-info">
+              <span class="airline-name"><i class="fa-solid fa-plane" style="color:var(--primary);"></i> IndiGo</span>
+              <span class="flight-number">6E-2154</span>
+            </div>
+            <div class="flight-info">
+              <div class="time-block">
+                <div class="time">06:30</div>
+                <div class="city-code">DEL</div>
+              </div>
+              <div class="flight-path">
+                <span class="duration">2h 10m</span>
+                <div class="line"></div>
+                <span class="stops">Non-Stop</span>
+              </div>
+              <div class="time-block">
+                <div class="time">08:40</div>
+                <div class="city-code">BOM</div>
+              </div>
+            </div>
+            <div class="price-block">
+              <div class="price">₹3,249</div>
+              <small>per adult</small>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+          </div>
+
+          <!-- Result 2 -->
+          <div class="result-card">
+            <div class="airline-info">
+              <span class="airline-name"><i class="fa-solid fa-plane" style="color:#C53030;"></i> Air India</span>
+              <span class="flight-number">AI-865</span>
+            </div>
+            <div class="flight-info">
+              <div class="time-block">
+                <div class="time">09:15</div>
+                <div class="city-code">DEL</div>
+              </div>
+              <div class="flight-path">
+                <span class="duration">2h 15m</span>
+                <div class="line"></div>
+                <span class="stops">Non-Stop</span>
+              </div>
+              <div class="time-block">
+                <div class="time">11:30</div>
+                <div class="city-code">BOM</div>
+              </div>
+            </div>
+            <div class="price-block">
+              <div class="price">₹4,122</div>
+              <small>per adult</small>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+          </div>
+
+          <!-- Result 3 -->
+          <div class="result-card">
+            <div class="airline-info">
+              <span class="airline-name"><i class="fa-solid fa-plane" style="color:#805AD5;"></i> Vistara</span>
+              <span class="flight-number">UK-953</span>
+            </div>
+            <div class="flight-info">
+              <div class="time-block">
+                <div class="time">12:45</div>
+                <div class="city-code">DEL</div>
+              </div>
+              <div class="flight-path">
+                <span class="duration">2h 05m</span>
+                <div class="line"></div>
+                <span class="stops">Non-Stop</span>
+              </div>
+              <div class="time-block">
+                <div class="time">14:50</div>
+                <div class="city-code">BOM</div>
+              </div>
+            </div>
+            <div class="price-block">
+              <div class="price">₹4,899</div>
+              <small>per adult</small>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+          </div>
+
+          <!-- Result 4 -->
+          <div class="result-card">
+            <div class="airline-info">
+              <span class="airline-name"><i class="fa-solid fa-plane" style="color:#DD6B20;"></i> SpiceJet</span>
+              <span class="flight-number">SG-8112</span>
+            </div>
+            <div class="flight-info">
+              <div class="time-block">
+                <div class="time">15:30</div>
+                <div class="city-code">DEL</div>
+              </div>
+              <div class="flight-path">
+                <span class="duration">4h 20m</span>
+                <div class="line"></div>
+                <span class="stops" style="color:#DD6B20;">1 Stop (JAI)</span>
+              </div>
+              <div class="time-block">
+                <div class="time">19:50</div>
+                <div class="city-code">BOM</div>
+              </div>
+            </div>
+            <div class="price-block">
+              <div class="price">₹2,599</div>
+              <small>per adult</small>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+          </div>
+
+          <!-- Result 5 -->
+          <div class="result-card">
+            <div class="airline-info">
+              <span class="airline-name"><i class="fa-solid fa-plane" style="color:#E53E3E;"></i> AirAsia India</span>
+              <span class="flight-number">I5-741</span>
+            </div>
+            <div class="flight-info">
+              <div class="time-block">
+                <div class="time">18:00</div>
+                <div class="city-code">DEL</div>
+              </div>
+              <div class="flight-path">
+                <span class="duration">2h 20m</span>
+                <div class="line"></div>
+                <span class="stops">Non-Stop</span>
+              </div>
+              <div class="time-block">
+                <div class="time">20:20</div>
+                <div class="city-code">BOM</div>
+              </div>
+            </div>
+            <div class="price-block">
+              <div class="price">₹2,899</div>
+              <small>per adult</small>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+          </div>
+
+          <!-- Result 6 -->
+          <div class="result-card">
+            <div class="airline-info">
+              <span class="airline-name"><i class="fa-solid fa-plane" style="color:var(--primary);"></i> IndiGo</span>
+              <span class="flight-number">6E-6094</span>
+            </div>
+            <div class="flight-info">
+              <div class="time-block">
+                <div class="time">21:45</div>
+                <div class="city-code">DEL</div>
+              </div>
+              <div class="flight-path">
+                <span class="duration">2h 10m</span>
+                <div class="line"></div>
+                <span class="stops">Non-Stop</span>
+              </div>
+              <div class="time-block">
+                <div class="time">23:55</div>
+                <div class="city-code">BOM</div>
+              </div>
+            </div>
+            <div class="price-block">
+              <div class="price">₹3,099</div>
+              <small>per adult</small>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer (simplified) -->
+  <footer class="footer">
+    <div class="footer__bottom">
+      <div class="container">
+        <p>&copy; 2025 TripVista. All rights reserved. Made with ❤️ in India</p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" id="scrollTopBtn" aria-label="Scroll to top"><i class="fa-solid fa-arrow-up"></i></button>
+  <script src="../js/main.js"></script>
+</body>
+</html>

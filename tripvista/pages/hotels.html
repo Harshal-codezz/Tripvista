@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hotel Search Results — TripVista</title>
+  <meta name="description" content="Find and book best hotels, resorts, and stays across 5,00,000+ properties on TripVista. Verified reviews and free cancellation." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .page-header {
+      background: linear-gradient(135deg, var(--primary), #0D47A1);
+      color: #fff; padding: 100px 0 48px;
+    }
+    .page-header h1 { font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 8px; }
+    .page-header p { color: rgba(255,255,255,0.8); }
+    .breadcrumb { display: flex; gap: 8px; font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 16px; }
+    .breadcrumb a { color: rgba(255,255,255,0.8); }
+    .breadcrumb a:hover { color: #fff; }
+
+    .results-layout {
+      display: grid; grid-template-columns: 280px 1fr; gap: 24px; padding: 40px 0 80px;
+    }
+    .filters {
+      background: #fff; border-radius: var(--radius-lg); padding: 24px;
+      box-shadow: var(--card-shadow); height: fit-content; position: sticky; top: 90px;
+    }
+    .filters h3 { font-size: 1.1rem; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--bg-alt); }
+    .filter-group { margin-bottom: 24px; }
+    .filter-group h4 { font-size: 0.88rem; font-weight: 600; margin-bottom: 12px; }
+    .filter-group label {
+      display: flex; align-items: center; gap: 8px; padding: 6px 0;
+      font-size: 0.88rem; color: #555; cursor: pointer;
+    }
+    .filter-group input[type="checkbox"] { accent-color: var(--primary); width: 16px; height: 16px; }
+    .price-range { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #666; }
+    .price-range input[type="range"] { flex: 1; accent-color: var(--primary); }
+
+    .hotels-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+    }
+    .hotel-card {
+      background: #fff; border-radius: var(--radius-lg); overflow: hidden;
+      box-shadow: var(--card-shadow); transition: var(--transition);
+    }
+    .hotel-card:hover { transform: translateY(-4px); box-shadow: var(--card-shadow-hover); }
+    .hotel-card__img {
+      height: 200px; overflow: hidden; position: relative;
+    }
+    .hotel-card__img img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition); }
+    .hotel-card:hover .hotel-card__img img { transform: scale(1.06); }
+    .hotel-card__rating-badge {
+      position: absolute; top: 12px; left: 12px;
+      background: var(--primary); color: #fff; padding: 4px 10px;
+      border-radius: var(--radius-sm); font-size: 0.78rem; font-weight: 700;
+    }
+    .hotel-card__body { padding: 20px; }
+    .hotel-card__body h3 { font-size: 1.1rem; margin-bottom: 4px; }
+    .hotel-location { font-size: 0.82rem; color: #888; margin-bottom: 10px; display: flex; align-items: center; gap: 4px; }
+    .hotel-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .hotel-tag {
+      background: var(--bg-alt); padding: 4px 10px; border-radius: var(--radius-full);
+      font-size: 0.72rem; color: #555; font-weight: 500;
+    }
+    .hotel-stars { color: #FFC107; font-size: 0.8rem; margin-bottom: 6px; }
+    .hotel-card__footer {
+      display: flex; align-items: flex-end; justify-content: space-between; margin-top: 12px;
+      padding-top: 12px; border-top: 1px solid var(--bg-alt);
+    }
+    .hotel-price .old { text-decoration: line-through; color: #999; font-size: 0.85rem; }
+    .hotel-price .new {
+      font-size: 1.4rem; font-weight: 700; color: var(--primary); font-family: var(--font-head);
+    }
+    .hotel-price small { font-size: 0.75rem; color: #888; }
+
+    @media (max-width: 1024px) { .results-layout { grid-template-columns: 1fr; } .filters { position: static; } }
+    @media (max-width: 768px) { .hotels-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header id="navbar" class="navbar scrolled">
+    <div class="container navbar__inner">
+      <a href="../index.html" class="navbar__logo" style="color: var(--dark);">
+        <i class="fa-solid fa-plane-departure" style="color: var(--primary);"></i>
+        <span>Trip<span class="logo-highlight">Vista</span></span>
+      </a>
+      <nav class="navbar__links">
+        <a href="../index.html#hero" class="nav-link">Flights</a>
+        <a href="../index.html#hero" class="nav-link active">Hotels</a>
+        <a href="../index.html#hero" class="nav-link">Trains</a>
+        <a href="../index.html#hero" class="nav-link">Buses</a>
+        <a href="../index.html#destinations" class="nav-link">Holiday Packages</a>
+        <a href="../index.html#deals" class="nav-link">Deals</a>
+      </nav>
+      <div class="navbar__actions">
+        <button class="btn btn-outline" style="color: var(--primary); border-color: var(--primary);">Sign In</button>
+        <button class="btn btn-primary">Sign Up</button>
+      </div>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Toggle Menu"><span style="background:var(--dark)"></span><span style="background:var(--dark)"></span><span style="background:var(--dark)"></span></button>
+    </div>
+  </header>
+
+  <section class="page-header">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a> <span>/</span> <span>Hotels in Goa</span>
+      </div>
+      <h1>Hotels in Goa</h1>
+      <p>Showing 6 best hotels • Check-in: 25 Mar 2026 • 2 Nights • 1 Room, 2 Guests</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="results-layout">
+      <aside class="filters">
+        <h3><i class="fa-solid fa-filter"></i> Filters</h3>
+        <div class="filter-group">
+          <h4>Price per Night</h4>
+          <div class="price-range">
+            <span>₹1,000</span>
+            <input type="range" min="1000" max="20000" value="12000" />
+            <span>₹20,000</span>
+          </div>
+        </div>
+        <div class="filter-group">
+          <h4>Star Rating</h4>
+          <label><input type="checkbox" checked /> 5 Star</label>
+          <label><input type="checkbox" checked /> 4 Star</label>
+          <label><input type="checkbox" checked /> 3 Star</label>
+          <label><input type="checkbox" /> 2 Star</label>
+        </div>
+        <div class="filter-group">
+          <h4>Amenities</h4>
+          <label><input type="checkbox" checked /> Swimming Pool</label>
+          <label><input type="checkbox" /> Spa</label>
+          <label><input type="checkbox" checked /> Free WiFi</label>
+          <label><input type="checkbox" /> Gym</label>
+          <label><input type="checkbox" checked /> Free Breakfast</label>
+        </div>
+        <div class="filter-group">
+          <h4>Property Type</h4>
+          <label><input type="checkbox" checked /> Hotels</label>
+          <label><input type="checkbox" /> Resorts</label>
+          <label><input type="checkbox" /> Villas</label>
+          <label><input type="checkbox" /> Hostels</label>
+        </div>
+      </aside>
+
+      <div class="hotels-grid">
+        <!-- Hotel 1 -->
+        <div class="hotel-card">
+          <div class="hotel-card__img">
+            <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80" alt="Taj Resort Goa" loading="lazy" />
+            <span class="hotel-card__rating-badge">9.2 Excellent</span>
+          </div>
+          <div class="hotel-card__body">
+            <div class="hotel-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+            <h3>Taj Fort Aguada Resort &amp; Spa</h3>
+            <div class="hotel-location"><i class="fa-solid fa-location-dot"></i> Sinquerim Beach, North Goa</div>
+            <div class="hotel-tags">
+              <span class="hotel-tag">Pool</span>
+              <span class="hotel-tag">Spa</span>
+              <span class="hotel-tag">Beachside</span>
+              <span class="hotel-tag">Free Breakfast</span>
+            </div>
+            <div class="hotel-card__footer">
+              <div class="hotel-price">
+                <span class="old">₹14,999</span>
+                <div class="new">₹9,499 <small>/night</small></div>
+              </div>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hotel 2 -->
+        <div class="hotel-card">
+          <div class="hotel-card__img">
+            <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=600&q=80" alt="Grand Hyatt Goa" loading="lazy" />
+            <span class="hotel-card__rating-badge">8.8 Very Good</span>
+          </div>
+          <div class="hotel-card__body">
+            <div class="hotel-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+            <h3>Grand Hyatt Goa</h3>
+            <div class="hotel-location"><i class="fa-solid fa-location-dot"></i> Bambolim, Central Goa</div>
+            <div class="hotel-tags">
+              <span class="hotel-tag">Pool</span>
+              <span class="hotel-tag">Gym</span>
+              <span class="hotel-tag">WiFi</span>
+              <span class="hotel-tag">Bar</span>
+            </div>
+            <div class="hotel-card__footer">
+              <div class="hotel-price">
+                <span class="old">₹11,500</span>
+                <div class="new">₹7,299 <small>/night</small></div>
+              </div>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hotel 3 -->
+        <div class="hotel-card">
+          <div class="hotel-card__img">
+            <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=80" alt="Alila Diwa Goa" loading="lazy" />
+            <span class="hotel-card__rating-badge">8.5 Very Good</span>
+          </div>
+          <div class="hotel-card__body">
+            <div class="hotel-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i></div>
+            <h3>Alila Diwa Goa</h3>
+            <div class="hotel-location"><i class="fa-solid fa-location-dot"></i> Majorda, South Goa</div>
+            <div class="hotel-tags">
+              <span class="hotel-tag">Pool</span>
+              <span class="hotel-tag">Spa</span>
+              <span class="hotel-tag">WiFi</span>
+              <span class="hotel-tag">Restaurant</span>
+            </div>
+            <div class="hotel-card__footer">
+              <div class="hotel-price">
+                <span class="old">₹8,999</span>
+                <div class="new">₹5,699 <small>/night</small></div>
+              </div>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hotel 4 -->
+        <div class="hotel-card">
+          <div class="hotel-card__img">
+            <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&q=80" alt="Novotel Goa" loading="lazy" />
+            <span class="hotel-card__rating-badge">8.1 Great</span>
+          </div>
+          <div class="hotel-card__body">
+            <div class="hotel-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i></div>
+            <h3>Novotel Goa Dona Sylvia</h3>
+            <div class="hotel-location"><i class="fa-solid fa-location-dot"></i> Cavelossim, South Goa</div>
+            <div class="hotel-tags">
+              <span class="hotel-tag">Pool</span>
+              <span class="hotel-tag">Beach Access</span>
+              <span class="hotel-tag">Kids Club</span>
+            </div>
+            <div class="hotel-card__footer">
+              <div class="hotel-price">
+                <span class="old">₹6,500</span>
+                <div class="new">₹4,199 <small>/night</small></div>
+              </div>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hotel 5 -->
+        <div class="hotel-card">
+          <div class="hotel-card__img">
+            <img src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=600&q=80" alt="Resort Rio" loading="lazy" />
+            <span class="hotel-card__rating-badge">7.8 Good</span>
+          </div>
+          <div class="hotel-card__body">
+            <div class="hotel-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i><i class="fa-regular fa-star"></i></div>
+            <h3>Resort Rio</h3>
+            <div class="hotel-location"><i class="fa-solid fa-location-dot"></i> Arpora, North Goa</div>
+            <div class="hotel-tags">
+              <span class="hotel-tag">Pool</span>
+              <span class="hotel-tag">Water Park</span>
+              <span class="hotel-tag">WiFi</span>
+            </div>
+            <div class="hotel-card__footer">
+              <div class="hotel-price">
+                <span class="old">₹4,999</span>
+                <div class="new">₹2,899 <small>/night</small></div>
+              </div>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hotel 6 -->
+        <div class="hotel-card">
+          <div class="hotel-card__img">
+            <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=600&q=80" alt="Goa Marriott" loading="lazy" />
+            <span class="hotel-card__rating-badge">8.6 Very Good</span>
+          </div>
+          <div class="hotel-card__body">
+            <div class="hotel-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+            <h3>Goa Marriott Resort &amp; Spa</h3>
+            <div class="hotel-location"><i class="fa-solid fa-location-dot"></i> Miramar, Panaji</div>
+            <div class="hotel-tags">
+              <span class="hotel-tag">Spa</span>
+              <span class="hotel-tag">Casino</span>
+              <span class="hotel-tag">Beachfront</span>
+              <span class="hotel-tag">WiFi</span>
+            </div>
+            <div class="hotel-card__footer">
+              <div class="hotel-price">
+                <span class="old">₹12,000</span>
+                <div class="new">₹8,199 <small>/night</small></div>
+              </div>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer__bottom">
+      <div class="container">
+        <p>&copy; 2025 TripVista. All rights reserved. Made with ❤️ in India</p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" id="scrollTopBtn" aria-label="Scroll to top"><i class="fa-solid fa-arrow-up"></i></button>
+  <script src="../js/main.js"></script>
+</body>
+</html>

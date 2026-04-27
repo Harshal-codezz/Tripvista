@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TripVista — Your Journey, Simplified | Book Flights, Hotels, Trains &amp; More</title>
+  <meta name="description" content="TripVista is India's leading travel booking platform. Book flights, hotels, trains, buses, and holiday packages at unbeatable prices. Trusted by 2 Crore+ travelers." />
+  <meta name="keywords" content="flights, hotels, trains, buses, holiday packages, travel booking, TripVista" />
+
+  <!-- Google Fonts: Inter + Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ==============================
+       SECTION 1: STICKY NAVIGATION
+  =============================== -->
+  <header id="navbar" class="navbar">
+    <div class="container navbar__inner">
+      <!-- Logo -->
+      <a href="index.html" class="navbar__logo" aria-label="TripVista Home">
+        <i class="fa-solid fa-plane-departure"></i>
+        <span>Trip<span class="logo-highlight">Vista</span></span>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="navbar__links" id="navLinks" aria-label="Main Navigation">
+        <a href="#hero" class="nav-link active" data-tab="flights">Flights</a>
+        <a href="#hero" class="nav-link" data-tab="hotels">Hotels</a>
+        <a href="#hero" class="nav-link" data-tab="trains">Trains</a>
+        <a href="#hero" class="nav-link" data-tab="buses">Buses</a>
+        <a href="#destinations" class="nav-link">Holiday Packages</a>
+        <a href="#deals" class="nav-link">Deals</a>
+      </nav>
+
+      <!-- Auth Buttons -->
+      <div class="navbar__actions">
+        <button class="btn btn-outline" id="signInBtn">Sign In</button>
+        <button class="btn btn-primary" id="signUpBtn">Sign Up</button>
+      </div>
+
+      <!-- Mobile Hamburger -->
+      <button class="hamburger" id="hamburgerBtn" aria-label="Toggle Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-drawer" id="mobileDrawer">
+      <nav class="mobile-drawer__links">
+        <a href="#hero" class="mobile-nav-link" data-tab="flights">✈ Flights</a>
+        <a href="#hero" class="mobile-nav-link" data-tab="hotels">🏨 Hotels</a>
+        <a href="#hero" class="mobile-nav-link" data-tab="trains">🚂 Trains</a>
+        <a href="#hero" class="mobile-nav-link" data-tab="buses">🚌 Buses</a>
+        <a href="#destinations" class="mobile-nav-link">🌴 Holiday Packages</a>
+        <a href="#deals" class="mobile-nav-link">🔥 Deals</a>
+      </nav>
+      <div class="mobile-drawer__actions">
+        <button class="btn btn-outline btn--full">Sign In</button>
+        <button class="btn btn-primary btn--full">Sign Up</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==============================
+       SECTION 2: HERO SECTION
+  =============================== -->
+  <section id="hero" class="hero">
+    <!-- Background Image + Gradient Overlay -->
+    <div class="hero__bg">
+      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1600&q=80" alt="Beautiful tropical beach travel destination" loading="eager" />
+      <div class="hero__overlay"></div>
+    </div>
+
+    <div class="container hero__content">
+      <!-- Headlines -->
+      <div class="hero__text fade-in-up">
+        <h1>Explore the World,<br />One Booking at a Time.</h1>
+        <p class="hero__subtitle">
+          Flights • Hotels • Trains • Buses • Holiday Packages — All at Unbeatable Prices
+        </p>
+      </div>
+
+      <!-- Glassmorphism Search Widget -->
+      <div class="search-widget fade-in-up" id="searchWidget">
+        <!-- Tab Row -->
+        <div class="search-widget__tabs" role="tablist">
+          <button class="tab-btn active" data-tab="flights" role="tab" aria-selected="true" id="tab-flights">
+            <i class="fa-solid fa-plane"></i> Flights
+          </button>
+          <button class="tab-btn" data-tab="hotels" role="tab" aria-selected="false" id="tab-hotels">
+            <i class="fa-solid fa-hotel"></i> Hotels
+          </button>
+          <button class="tab-btn" data-tab="trains" role="tab" aria-selected="false" id="tab-trains">
+            <i class="fa-solid fa-train"></i> Trains
+          </button>
+          <button class="tab-btn" data-tab="buses" role="tab" aria-selected="false" id="tab-buses">
+            <i class="fa-solid fa-bus"></i> Buses
+          </button>
+          <button class="tab-btn" data-tab="packages" role="tab" aria-selected="false" id="tab-packages">
+            <i class="fa-solid fa-umbrella-beach"></i> Packages
+          </button>
+        </div>
+
+        <!-- FLIGHTS FORM (default active) -->
+        <div class="tab-content active" id="content-flights" role="tabpanel">
+          <form class="search-form" id="flightsForm" onsubmit="return false;">
+            <!-- Trip Type Radio Pills -->
+            <div class="radio-pills">
+              <label class="radio-pill active">
+                <input type="radio" name="tripType" value="oneway" checked /> One Way
+              </label>
+              <label class="radio-pill">
+                <input type="radio" name="tripType" value="roundtrip" /> Round Trip
+              </label>
+              <label class="radio-pill">
+                <input type="radio" name="tripType" value="multicity" /> Multi City
+              </label>
+            </div>
+
+            <!-- From / To Row -->
+            <div class="form-row form-row--cities">
+              <div class="input-group">
+                <label for="flightFrom">From</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-location-dot"></i>
+                  <input type="text" id="flightFrom" placeholder="City or Airport" autocomplete="off" title="Enter departure city or airport" />
+                </div>
+              </div>
+
+              <button type="button" class="swap-btn" id="swapCities" aria-label="Swap cities" title="Swap From and To cities">
+                <i class="fa-solid fa-right-left"></i>
+              </button>
+
+              <div class="input-group">
+                <label for="flightTo">To</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-location-dot"></i>
+                  <input type="text" id="flightTo" placeholder="City or Airport" autocomplete="off" title="Enter arrival city or airport" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Date & Travelers Row -->
+            <div class="form-row form-row--details">
+              <div class="input-group">
+                <label for="departDate">Departure</label>
+                <div class="input-wrapper">
+                  <i class="fa-regular fa-calendar"></i>
+                  <input type="date" id="departDate" title="Select departure date" />
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="returnDate">Return</label>
+                <div class="input-wrapper">
+                  <i class="fa-regular fa-calendar"></i>
+                  <input type="date" id="returnDate" title="Select return date" />
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="travelers">Travellers &amp; Class</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-user"></i>
+                  <select id="travelers" title="Select number of travelers and class">
+                    <option>1 Adult, Economy</option>
+                    <option>2 Adults, Economy</option>
+                    <option>1 Adult, Business</option>
+                    <option>2 Adults, Business</option>
+                    <option>Family (2A+2C), Economy</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Search Button -->
+            <button type="submit" class="btn btn-primary btn--full btn--search" id="searchFlightsBtn">
+              <i class="fa-solid fa-magnifying-glass"></i> Search Flights
+              <span class="spinner" id="flightSpinner"></span>
+            </button>
+          </form>
+        </div>
+
+        <!-- HOTELS FORM -->
+        <div class="tab-content" id="content-hotels" role="tabpanel">
+          <form class="search-form" id="hotelsForm" onsubmit="return false;">
+            <div class="form-row">
+              <div class="input-group input-group--full">
+                <label for="hotelCity">City, Area or Hotel Name</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-location-dot"></i>
+                  <input type="text" id="hotelCity" placeholder="e.g. Goa, Mumbai, Taj Hotel" title="Enter city, area, or hotel name" />
+                </div>
+              </div>
+            </div>
+            <div class="form-row form-row--details">
+              <div class="input-group">
+                <label for="checkinDate">Check-in</label>
+                <div class="input-wrapper">
+                  <i class="fa-regular fa-calendar"></i>
+                  <input type="date" id="checkinDate" title="Select check-in date" />
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="checkoutDate">Check-out</label>
+                <div class="input-wrapper">
+                  <i class="fa-regular fa-calendar"></i>
+                  <input type="date" id="checkoutDate" title="Select check-out date" />
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="roomsGuests">Rooms &amp; Guests</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-user"></i>
+                  <select id="roomsGuests" title="Select rooms and guests">
+                    <option>1 Room, 2 Guests</option>
+                    <option>1 Room, 1 Guest</option>
+                    <option>2 Rooms, 4 Guests</option>
+                    <option>3 Rooms, 6 Guests</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn--full btn--search" id="searchHotelsBtn">
+              <i class="fa-solid fa-magnifying-glass"></i> Search Hotels
+              <span class="spinner" id="hotelSpinner"></span>
+            </button>
+          </form>
+        </div>
+
+        <!-- TRAINS FORM -->
+        <div class="tab-content" id="content-trains" role="tabpanel">
+          <form class="search-form" id="trainsForm" onsubmit="return false;">
+            <div class="form-row form-row--cities">
+              <div class="input-group">
+                <label for="trainFrom">From Station</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-location-dot"></i>
+                  <input type="text" id="trainFrom" placeholder="e.g. New Delhi" title="Enter departure station" />
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="trainTo">To Station</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-location-dot"></i>
+                  <input type="text" id="trainTo" placeholder="e.g. Mumbai Central" title="Enter arrival station" />
+                </div>
+              </div>
+            </div>
+            <div class="form-row form-row--details">
+              <div class="input-group">
+                <label for="trainDate">Travel Date</label>
+                <div class="input-wrapper">
+                  <i class="fa-regular fa-calendar"></i>
+                  <input type="date" id="trainDate" title="Select travel date" />
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="trainClass">Class</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-couch"></i>
+                  <select id="trainClass" title="Select travel class">
+                    <option>All Classes</option>
+                    <option>Sleeper (SL)</option>
+                    <option>AC 3 Tier (3A)</option>
+                    <option>AC 2 Tier (2A)</option>
+                    <option>AC First Class (1A)</option>
+                    <option>General (GN)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn--full btn--search" id="searchTrainsBtn">
+              <i class="fa-solid fa-magnifying-glass"></i> Search Trains
+              <span class="spinner" id="trainSpinner"></span>
+            </button>
+          </form>
+        </div>
+
+        <!-- BUSES FORM -->
+        <div class="tab-content" id="content-buses" role="tabpanel">
+          <form class="search-form" id="busesForm" onsubmit="return false;">
+            <div class="form-row form-row--cities">
+              <div class="input-group">
+                <label for="busFrom">From City</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-location-dot"></i>
+                  <input type="text" id="busFrom" placeholder="e.g. Pune" title="Enter departure city" />
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="busTo">To City</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-location-dot"></i>
+                  <input type="text" id="busTo" placeholder="e.g. Mumbai" title="Enter arrival city" />
+                </div>
+              </div>
+            </div>
+            <div class="form-row form-row--details">
+              <div class="input-group">
+                <label for="busDate">Travel Date</label>
+                <div class="input-wrapper">
+                  <i class="fa-regular fa-calendar"></i>
+                  <input type="date" id="busDate" title="Select travel date" />
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="busType">Bus Type</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-bus"></i>
+                  <select id="busType" title="Select bus type">
+                    <option>All Types</option>
+                    <option>AC Sleeper</option>
+                    <option>Non-AC Sleeper</option>
+                    <option>AC Seater</option>
+                    <option>Volvo Multi-Axle</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn--full btn--search" id="searchBusesBtn">
+              <i class="fa-solid fa-magnifying-glass"></i> Search Buses
+              <span class="spinner" id="busSpinner"></span>
+            </button>
+          </form>
+        </div>
+
+        <!-- PACKAGES FORM -->
+        <div class="tab-content" id="content-packages" role="tabpanel">
+          <form class="search-form" id="packagesForm" onsubmit="return false;">
+            <div class="form-row">
+              <div class="input-group input-group--full">
+                <label for="pkgDest">Destination</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-umbrella-beach"></i>
+                  <input type="text" id="pkgDest" placeholder="e.g. Goa, Manali, Bali" title="Enter destination" />
+                </div>
+              </div>
+            </div>
+            <div class="form-row form-row--details">
+              <div class="input-group">
+                <label for="pkgStart">Travel Date</label>
+                <div class="input-wrapper">
+                  <i class="fa-regular fa-calendar"></i>
+                  <input type="date" id="pkgStart" title="Select travel start date" />
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="pkgDuration">Duration</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-clock"></i>
+                  <select id="pkgDuration" title="Select package duration">
+                    <option>3 Nights / 4 Days</option>
+                    <option>4 Nights / 5 Days</option>
+                    <option>5 Nights / 6 Days</option>
+                    <option>7 Nights / 8 Days</option>
+                  </select>
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="pkgTravelers">Travelers</label>
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-users"></i>
+                  <select id="pkgTravelers" title="Select number of travelers">
+                    <option>2 Adults</option>
+                    <option>1 Adult</option>
+                    <option>2 Adults + 1 Child</option>
+                    <option>2 Adults + 2 Children</option>
+                    <option>Group (5+)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn--full btn--search" id="searchPackagesBtn">
+              <i class="fa-solid fa-magnifying-glass"></i> Search Packages
+              <span class="spinner" id="pkgSpinner"></span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Trust Badges -->
+      <div class="trust-badges fade-in-up">
+        <div class="trust-badge">
+          <i class="fa-solid fa-circle-check"></i>
+          <span><strong class="counter" data-target="20000000">2 Crore+</strong> Happy Travelers</span>
+        </div>
+        <div class="trust-badge">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>100% Secure Payments</span>
+        </div>
+        <div class="trust-badge">
+          <i class="fa-solid fa-bullseye"></i>
+          <span>Best Price Guarantee</span>
+        </div>
+        <div class="trust-badge">
+          <i class="fa-solid fa-star"></i>
+          <span>4.5/5 Rated App</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================
+       SECTION 3: MARQUEE DEAL STRIP
+  =============================== -->
+  <div class="marquee-strip">
+    <div class="marquee-track">
+      <span class="marquee-text">
+        🔥 FLASH SALE: Mumbai → Goa from ₹1,299 &nbsp;|&nbsp;
+        🏨 Hotels up to 60% OFF &nbsp;|&nbsp;
+        ✈ International Flights: Dubai from ₹8,999 &nbsp;|&nbsp;
+        🌴 Manali Package ₹5,999/person &nbsp;|&nbsp;
+        🚂 Tatkal Bookings Now Open &nbsp;|&nbsp;
+        🚌 Volvo Bus: Pune → Mumbai from ₹399 &nbsp;|&nbsp;
+        🔥 FLASH SALE: Mumbai → Goa from ₹1,299 &nbsp;|&nbsp;
+        🏨 Hotels up to 60% OFF &nbsp;|&nbsp;
+        ✈ International Flights: Dubai from ₹8,999 &nbsp;|&nbsp;
+        🌴 Manali Package ₹5,999/person &nbsp;|&nbsp;
+      </span>
+    </div>
+  </div>
+
+  <!-- ==============================
+       SECTION 4: POPULAR DESTINATIONS
+  =============================== -->
+  <section id="destinations" class="section destinations">
+    <div class="container">
+      <div class="section__header fade-in-up">
+        <h2>🌍 Popular Destinations</h2>
+        <p class="section__subtitle">Handpicked getaways loved by millions of travelers</p>
+      </div>
+
+      <div class="dest-grid fade-in-up">
+        <!-- Goa -->
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=600&q=80" alt="Goa Beach" loading="lazy" />
+          <div class="dest-card__overlay">
+            <a href="packages.html" class="btn btn-primary btn--sm">Explore →</a>
+          </div>
+          <div class="dest-card__info">
+            <h3>Goa</h3>
+            <p>Beaches &amp; Nightlife</p>
+          </div>
+          <span class="dest-card__price">From ₹1,999</span>
+        </div>
+
+        <!-- Manali -->
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=600&q=80" alt="Manali Snow Mountains" loading="lazy" />
+          <div class="dest-card__overlay">
+            <a href="packages.html" class="btn btn-primary btn--sm">Explore →</a>
+          </div>
+          <div class="dest-card__info">
+            <h3>Manali</h3>
+            <p>Snow &amp; Adventure</p>
+          </div>
+          <span class="dest-card__price">From ₹3,499</span>
+        </div>
+
+        <!-- Rajasthan -->
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1599661046289-e31897846e41?w=600&q=80" alt="Rajasthan Royal Palace" loading="lazy" />
+          <div class="dest-card__overlay">
+            <a href="packages.html" class="btn btn-primary btn--sm">Explore →</a>
+          </div>
+          <div class="dest-card__info">
+            <h3>Rajasthan</h3>
+            <p>Royal Heritage</p>
+          </div>
+          <span class="dest-card__price">From ₹4,999</span>
+        </div>
+
+        <!-- Kerala -->
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=600&q=80" alt="Kerala Backwaters" loading="lazy" />
+          <div class="dest-card__overlay">
+            <a href="packages.html" class="btn btn-primary btn--sm">Explore →</a>
+          </div>
+          <div class="dest-card__info">
+            <h3>Kerala</h3>
+            <p>God's Own Country</p>
+          </div>
+          <span class="dest-card__price">From ₹5,499</span>
+        </div>
+
+        <!-- Andaman -->
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1544550581-5f7ceaf7f793?w=600&q=80" alt="Andaman Crystal Waters" loading="lazy" />
+          <div class="dest-card__overlay">
+            <a href="packages.html" class="btn btn-primary btn--sm">Explore →</a>
+          </div>
+          <div class="dest-card__info">
+            <h3>Andaman</h3>
+            <p>Crystal Waters</p>
+          </div>
+          <span class="dest-card__price">From ₹8,999</span>
+        </div>
+
+        <!-- Dubai -->
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600&q=80" alt="Dubai Skyline" loading="lazy" />
+          <div class="dest-card__overlay">
+            <a href="packages.html" class="btn btn-primary btn--sm">Explore →</a>
+          </div>
+          <div class="dest-card__info">
+            <h3>Dubai</h3>
+            <p>Modern Marvel</p>
+          </div>
+          <span class="dest-card__price">From ₹14,999</span>
+        </div>
+
+        <!-- Bali -->
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&q=80" alt="Bali Tropical Paradise" loading="lazy" />
+          <div class="dest-card__overlay">
+            <a href="packages.html" class="btn btn-primary btn--sm">Explore →</a>
+          </div>
+          <div class="dest-card__info">
+            <h3>Bali</h3>
+            <p>Tropical Paradise</p>
+          </div>
+          <span class="dest-card__price">From ₹22,999</span>
+        </div>
+
+        <!-- Bangkok -->
+        <div class="dest-card">
+          <img src="https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=600&q=80" alt="Bangkok Temple Culture" loading="lazy" />
+          <div class="dest-card__overlay">
+            <a href="packages.html" class="btn btn-primary btn--sm">Explore →</a>
+          </div>
+          <div class="dest-card__info">
+            <h3>Bangkok</h3>
+            <p>Street Food &amp; Culture</p>
+          </div>
+          <span class="dest-card__price">From ₹18,999</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================
+       SECTION 5: OUR SERVICES
+  =============================== -->
+  <section id="services" class="section services">
+    <div class="container">
+      <div class="section__header fade-in-up">
+        <h2>Everything You Need to Travel Smart</h2>
+        <p class="section__subtitle">Book, manage, and explore — all from one platform</p>
+      </div>
+
+      <div class="services-grid fade-in-up">
+        <div class="service-card">
+          <div class="service-card__icon">
+            <i class="fa-solid fa-plane"></i>
+          </div>
+          <h3>Domestic Flights</h3>
+          <p>500+ routes, 10+ airlines, real-time seat availability. Best fares with zero hidden charges.</p>
+          <a href="flights.html" class="service-card__cta">Book Now →</a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon">
+            <i class="fa-solid fa-globe"></i>
+          </div>
+          <h3>International Flights</h3>
+          <p>Fly worldwide with top carriers. Exclusive web fares &amp; multi-city options.</p>
+          <a href="flights.html" class="service-card__cta">Explore Routes →</a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon">
+            <i class="fa-solid fa-hotel"></i>
+          </div>
+          <h3>Hotels &amp; Resorts</h3>
+          <p>5,00,000+ properties globally. Verified reviews, free cancellation options.</p>
+          <a href="hotels.html" class="service-card__cta">Browse Hotels →</a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon">
+            <i class="fa-solid fa-train"></i>
+          </div>
+          <h3>Train Tickets</h3>
+          <p>Book IRCTC trains instantly. Tatkal &amp; premium quota availability. Live PNR status.</p>
+          <a href="pages/trains.html" class="service-card__cta">Check Trains →</a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon">
+            <i class="fa-solid fa-bus"></i>
+          </div>
+          <h3>Bus Tickets</h3>
+          <p>1000+ operators. Sleeper, AC, Volvo buses. Live tracking &amp; e-tickets.</p>
+          <a href="pages/buses.html" class="service-card__cta">Book Bus →</a>
+        </div>
+
+        <div class="service-card">
+          <div class="service-card__icon">
+            <i class="fa-solid fa-umbrella-beach"></i>
+          </div>
+          <h3>Holiday Packages</h3>
+          <p>All-inclusive packages — stay, flights, meals &amp; sightseeing. Customize your dream trip.</p>
+          <a href="packages.html" class="service-card__cta">View Packages →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================
+       SECTION 6: HOT DEALS & OFFERS
+  =============================== -->
+  <section id="deals" class="section deals">
+    <div class="container">
+      <div class="section__header fade-in-up">
+        <h2>🔥 Today's Best Deals</h2>
+        <p class="section__subtitle">Limited time offers — grab before they're gone!</p>
+      </div>
+
+      <div class="deals-grid fade-in-up">
+        <!-- Deal 1 -->
+        <div class="deal-card">
+          <div class="deal-card__header">
+            <span class="deal-badge">DEAL</span>
+            <span class="deal-timer" data-hours="3" data-minutes="0" data-seconds="0">
+              <i class="fa-regular fa-clock"></i> Ends in: <span class="timer-display">03:00:00</span>
+            </span>
+          </div>
+          <div class="deal-card__body">
+            <div class="deal-card__icon"><i class="fa-solid fa-plane"></i></div>
+            <h3>Delhi → Mumbai</h3>
+            <p>IndiGo • Non-Stop • 2h 10m</p>
+            <div class="deal-card__price">
+              <span class="price-old">₹3,499</span>
+              <span class="price-new">₹1,799</span>
+            </div>
+          </div>
+          <button class="btn btn-primary btn--full btn--sm">Book Now</button>
+        </div>
+
+        <!-- Deal 2 -->
+        <div class="deal-card">
+          <div class="deal-card__header">
+            <span class="deal-badge">DEAL</span>
+            <span class="deal-timer" data-hours="5" data-minutes="30" data-seconds="0">
+              <i class="fa-regular fa-clock"></i> Ends in: <span class="timer-display">05:30:00</span>
+            </span>
+          </div>
+          <div class="deal-card__body">
+            <div class="deal-card__icon"><i class="fa-solid fa-hotel"></i></div>
+            <h3>Goa Beach Resort</h3>
+            <p>4-Star • Beachside • Breakfast Included</p>
+            <div class="deal-card__price">
+              <span class="price-old">₹4,999</span>
+              <span class="price-new">₹2,299<small>/night</small></span>
+            </div>
+          </div>
+          <button class="btn btn-primary btn--full btn--sm">Book Now</button>
+        </div>
+
+        <!-- Deal 3 -->
+        <div class="deal-card">
+          <div class="deal-card__header">
+            <span class="deal-badge">DEAL</span>
+            <span class="deal-timer" data-hours="8" data-minutes="15" data-seconds="0">
+              <i class="fa-regular fa-clock"></i> Ends in: <span class="timer-display">08:15:00</span>
+            </span>
+          </div>
+          <div class="deal-card__body">
+            <div class="deal-card__icon"><i class="fa-solid fa-umbrella-beach"></i></div>
+            <h3>Manali Trip Package</h3>
+            <p>4N/5D • Stay + Meals + Sightseeing</p>
+            <div class="deal-card__price">
+              <span class="price-old">₹12,999</span>
+              <span class="price-new">₹7,499<small>/person</small></span>
+            </div>
+          </div>
+          <button class="btn btn-primary btn--full btn--sm">Book Now</button>
+        </div>
+
+        <!-- Deal 4 -->
+        <div class="deal-card">
+          <div class="deal-card__header">
+            <span class="deal-badge">DEAL</span>
+            <span class="deal-timer" data-hours="2" data-minutes="45" data-seconds="0">
+              <i class="fa-regular fa-clock"></i> Ends in: <span class="timer-display">02:45:00</span>
+            </span>
+          </div>
+          <div class="deal-card__body">
+            <div class="deal-card__icon"><i class="fa-solid fa-train"></i></div>
+            <h3>Chennai → Bangalore</h3>
+            <p>Shatabdi Express • AC Chair Car</p>
+            <div class="deal-card__price">
+              <span class="price-old">₹850</span>
+              <span class="price-new">₹499</span>
+            </div>
+          </div>
+          <button class="btn btn-primary btn--full btn--sm">Book Now</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================
+       SECTION 7: WHY CHOOSE TRIPVISTA
+  =============================== -->
+  <section id="why-us" class="section why-us">
+    <div class="container">
+      <div class="section__header fade-in-up">
+        <h2>Why Travelers Trust TripVista</h2>
+      </div>
+
+      <div class="why-grid fade-in-up">
+        <div class="why-card">
+          <div class="why-card__icon"><i class="fa-solid fa-trophy"></i></div>
+          <h3>Best Price Guarantee</h3>
+          <p>We match any lower price found online. Always get the best deal, guaranteed.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-card__icon"><i class="fa-solid fa-lock"></i></div>
+          <h3>100% Secure Booking</h3>
+          <p>PCI-DSS certified payments. Your data and money are always protected.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-card__icon"><i class="fa-solid fa-bolt"></i></div>
+          <h3>Instant Confirmation</h3>
+          <p>Get e-tickets &amp; vouchers instantly on email and WhatsApp.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-card__icon"><i class="fa-solid fa-headset"></i></div>
+          <h3>24/7 Customer Support</h3>
+          <p>Real humans available round the clock via chat, email, and phone.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-card__icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+          <h3>Easy Cancellation</h3>
+          <p>Flexible cancellation &amp; rebooking policies. Hassle-free refunds within 5-7 days.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-card__icon"><i class="fa-solid fa-star"></i></div>
+          <h3>4.5★ Rated Platform</h3>
+          <p>Trusted by millions. Award-winning travel platform since 2009.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================
+       SECTION 8: TRAVELER TESTIMONIALS
+  =============================== -->
+  <section id="testimonials" class="section testimonials">
+    <div class="container">
+      <div class="section__header fade-in-up">
+        <h2>What Our Travelers Say</h2>
+      </div>
+
+      <div class="testimonials-grid fade-in-up">
+        <div class="testimonial-card">
+          <div class="testimonial-card__stars">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="testimonial-card__text">
+            "Booked Goa trip in under 5 mins. Prices were lowest compared to 3 other apps. Highly recommend!"
+          </p>
+          <div class="testimonial-card__author">
+            <div class="avatar">AM</div>
+            <div>
+              <strong>Arjun M.</strong>
+              <span>Pune</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-card__stars">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="testimonial-card__text">
+            "The hotel deals are insane! Got a 5-star in Goa for the price of a 3-star elsewhere. Will use again!"
+          </p>
+          <div class="testimonial-card__author">
+            <div class="avatar">PS</div>
+            <div>
+              <strong>Priya S.</strong>
+              <span>Mumbai</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="testimonial-card__stars">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="testimonial-card__text">
+            "Customer support was amazing when my flight changed. Full refund in 4 days. Trust this app completely."
+          </p>
+          <div class="testimonial-card__author">
+            <div class="avatar">RK</div>
+            <div>
+              <strong>Ravi K.</strong>
+              <span>Bangalore</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================
+       SECTION 9: MOBILE APP DOWNLOAD
+  =============================== -->
+  <section id="app-download" class="section app-download">
+    <div class="container app-download__inner">
+      <!-- Left Content -->
+      <div class="app-download__content fade-in-up">
+        <h2>Take TripVista With You Everywhere</h2>
+        <p>Book on the go. Get exclusive app-only deals and manage your trips effortlessly.</p>
+        <div class="app-features">
+          <span class="feature-pill"><i class="fa-solid fa-location-dot"></i> Live Tracking</span>
+          <span class="feature-pill"><i class="fa-solid fa-bell"></i> Price Alerts</span>
+          <span class="feature-pill"><i class="fa-solid fa-credit-card"></i> Saved Cards</span>
+          <span class="feature-pill"><i class="fa-solid fa-ticket"></i> E-Tickets</span>
+        </div>
+        <div class="app-buttons">
+          <a href="#" class="store-btn" aria-label="Download on App Store">
+            <i class="fa-brands fa-apple"></i>
+            <div>
+              <small>Download on the</small>
+              <strong>App Store</strong>
+            </div>
+          </a>
+          <a href="#" class="store-btn" aria-label="Get it on Google Play">
+            <i class="fa-brands fa-google-play"></i>
+            <div>
+              <small>Get it on</small>
+              <strong>Google Play</strong>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Phone Mockup -->
+      <div class="app-download__mockup fade-in-up">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="phone-status-bar">
+              <span>9:41</span>
+              <span><i class="fa-solid fa-signal"></i> <i class="fa-solid fa-wifi"></i> <i class="fa-solid fa-battery-full"></i></span>
+            </div>
+            <div class="phone-app-header">
+              <i class="fa-solid fa-plane-departure"></i> TripVista
+            </div>
+            <div class="phone-search-card">
+              <div class="phone-tab active">✈ Flights</div>
+              <div class="phone-input"><i class="fa-solid fa-location-dot"></i> Mumbai (BOM)</div>
+              <div class="phone-input"><i class="fa-solid fa-location-dot"></i> Goa (GOI)</div>
+              <div class="phone-input"><i class="fa-regular fa-calendar"></i> 25 Mar 2026</div>
+              <div class="phone-btn">Search Flights</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================
+       SECTION 10: NEWSLETTER + FOOTER
+  =============================== -->
+  <!-- Newsletter Strip -->
+  <section id="newsletter" class="newsletter">
+    <div class="container newsletter__inner">
+      <div class="newsletter__text fade-in-up">
+        <h2>Get Exclusive Travel Deals in Your Inbox</h2>
+        <p>Join 5,00,000+ subscribers. No spam, ever.</p>
+      </div>
+      <form class="newsletter__form fade-in-up" onsubmit="return false;">
+        <div class="newsletter__input-group">
+          <input type="email" placeholder="Enter your email address" required aria-label="Email address" id="newsletterEmail" />
+          <button type="submit" class="btn btn-primary" id="subscribeBtn">Subscribe</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="footer" class="footer">
+    <div class="container footer__grid">
+      <!-- Col 1: About -->
+      <div class="footer__col">
+        <a href="index.html" class="footer__logo">
+          <i class="fa-solid fa-plane-departure"></i>
+          Trip<span class="logo-highlight">Vista</span>
+        </a>
+        <p>Simplifying travel for millions across India and beyond. Your journey starts here.</p>
+        <div class="footer__socials">
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <!-- Col 2: Quick Links -->
+      <div class="footer__col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Affiliate Program</a></li>
+          <li><a href="#">Advertise with Us</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Support -->
+      <div class="footer__col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Cancellation Policy</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms &amp; Conditions</a></li>
+          <li><a href="#">FAQs</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Contact -->
+      <div class="footer__col">
+        <h4>Contact</h4>
+        <ul class="footer__contact">
+          <li><i class="fa-solid fa-phone"></i> 1800-123-4567 (Toll Free)</li>
+          <li><i class="fa-solid fa-envelope"></i> support@tripvista.com</li>
+          <li><i class="fa-solid fa-clock"></i> 24/7 Customer Support</li>
+        </ul>
+        <div class="footer__payments">
+          <span title="Visa"><i class="fa-brands fa-cc-visa"></i></span>
+          <span title="Mastercard"><i class="fa-brands fa-cc-mastercard"></i></span>
+          <span title="PayPal"><i class="fa-brands fa-cc-paypal"></i></span>
+          <span title="Amazon Pay"><i class="fa-brands fa-cc-amazon-pay"></i></span>
+          <span title="Google Pay"><i class="fa-brands fa-google-pay"></i></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom strip -->
+    <div class="footer__bottom">
+      <div class="container">
+        <p>&copy; 2025 TripVista. All rights reserved. Made with ❤️ in India</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==============================
+       SIGN IN MODAL
+  =============================== -->
+  <div class="auth-modal-overlay" id="signInModal">
+    <div class="auth-modal">
+      <button class="auth-modal__close" id="closeSignIn" aria-label="Close">&times;</button>
+      <div class="auth-modal__header">
+        <i class="fa-solid fa-user-lock"></i>
+        <h2>Welcome Back</h2>
+        <p>Sign in to your TripVista account</p>
+      </div>
+      <form class="auth-modal__form" id="signInForm" onsubmit="return false;">
+        <div class="auth-input-group">
+          <label for="loginEmail">Email Address</label>
+          <div class="auth-input-wrapper">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" id="loginEmail" placeholder="you@example.com" required />
+          </div>
+        </div>
+        <div class="auth-input-group">
+          <label for="loginPassword">Password</label>
+          <div class="auth-input-wrapper">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" id="loginPassword" placeholder="Enter your password" required />
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn--full" id="signInSubmit">
+          <i class="fa-solid fa-right-to-bracket"></i> Sign In
+        </button>
+        <div class="auth-modal__footer">
+          <p>Don't have an account? <a href="#" id="switchToSignUp">Sign Up</a></p>
+        </div>
+      </form>
+      <div class="auth-message" id="signInMessage"></div>
+    </div>
+  </div>
+
+  <!-- ==============================
+       SIGN UP MODAL
+  =============================== -->
+  <div class="auth-modal-overlay" id="signUpModal">
+    <div class="auth-modal">
+      <button class="auth-modal__close" id="closeSignUp" aria-label="Close">&times;</button>
+      <div class="auth-modal__header">
+        <i class="fa-solid fa-user-plus"></i>
+        <h2>Create Account</h2>
+        <p>Join TripVista and start exploring</p>
+      </div>
+      <form class="auth-modal__form" id="signUpForm" onsubmit="return false;">
+        <div class="auth-input-group">
+          <label for="regName">Full Name</label>
+          <div class="auth-input-wrapper">
+            <i class="fa-solid fa-user"></i>
+            <input type="text" id="regName" placeholder="Your full name" required />
+          </div>
+        </div>
+        <div class="auth-input-group">
+          <label for="regEmail">Email Address</label>
+          <div class="auth-input-wrapper">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" id="regEmail" placeholder="you@example.com" required />
+          </div>
+        </div>
+        <div class="auth-input-group">
+          <label for="regPhone">Phone Number</label>
+          <div class="auth-input-wrapper">
+            <i class="fa-solid fa-phone"></i>
+            <input type="tel" id="regPhone" placeholder="9876543210" />
+          </div>
+        </div>
+        <div class="auth-input-group">
+          <label for="regPassword">Password</label>
+          <div class="auth-input-wrapper">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" id="regPassword" placeholder="Min 6 characters" required minlength="6" />
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn--full" id="signUpSubmit">
+          <i class="fa-solid fa-user-plus"></i> Create Account
+        </button>
+        <div class="auth-modal__footer">
+          <p>Already have an account? <a href="#" id="switchToSignIn">Sign In</a></p>
+        </div>
+      </form>
+      <div class="auth-message" id="signUpMessage"></div>
+    </div>
+  </div>
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-top" id="scrollTopBtn" aria-label="Scroll to top" title="Back to top">
+    <i class="fa-solid fa-arrow-up"></i>
+  </button>
+
+  <!-- Main JavaScript -->
+  <script src="js/main.js"></script>
+</body>
+</html>

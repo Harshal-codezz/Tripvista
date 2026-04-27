@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Holiday Packages — TripVista</title>
+  <meta name="description" content="Explore all-inclusive holiday packages to Goa, Manali, Kerala, Dubai, Bali and more. Affordable travel packages with flights, hotels, and sightseeing included." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .page-header {
+      background: linear-gradient(135deg, var(--primary), #0D47A1);
+      color: #fff; padding: 100px 0 48px;
+    }
+    .page-header h1 { font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 8px; }
+    .page-header p { color: rgba(255,255,255,0.8); }
+    .breadcrumb { display: flex; gap: 8px; font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 16px; }
+    .breadcrumb a { color: rgba(255,255,255,0.8); }
+
+    .packages-section { padding: 48px 0 80px; }
+
+    .category-tabs {
+      display: flex; gap: 8px; margin-bottom: 32px; flex-wrap: wrap;
+    }
+    .cat-tab {
+      padding: 10px 24px; border-radius: var(--radius-full); border: 1px solid var(--bg-alt);
+      background: #fff; font-family: var(--font-body); font-size: 0.88rem;
+      cursor: pointer; transition: var(--transition-fast); color: #555; font-weight: 500;
+    }
+    .cat-tab:hover, .cat-tab.active {
+      background: var(--primary); color: #fff; border-color: var(--primary);
+    }
+
+    .packages-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    }
+
+    .pkg-card {
+      background: #fff; border-radius: var(--radius-lg); overflow: hidden;
+      box-shadow: var(--card-shadow); transition: var(--transition);
+    }
+    .pkg-card:hover { transform: translateY(-6px); box-shadow: var(--card-shadow-hover); }
+
+    .pkg-card__img {
+      height: 220px; overflow: hidden; position: relative;
+    }
+    .pkg-card__img img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition); }
+    .pkg-card:hover .pkg-card__img img { transform: scale(1.06); }
+
+    .pkg-card__duration {
+      position: absolute; top: 12px; left: 12px;
+      background: var(--primary); color: #fff; padding: 4px 12px;
+      border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 600;
+    }
+    .pkg-card__type {
+      position: absolute; top: 12px; right: 12px;
+      background: rgba(0,0,0,0.5); backdrop-filter: blur(6px);
+      color: #fff; padding: 4px 10px;
+      border-radius: var(--radius-full); font-size: 0.72rem; font-weight: 500;
+    }
+
+    .pkg-card__body { padding: 20px; }
+    .pkg-card__body h3 { font-size: 1.15rem; margin-bottom: 8px; }
+    .pkg-location { font-size: 0.82rem; color: #888; margin-bottom: 12px; display: flex; align-items: center; gap: 4px; }
+
+    .pkg-includes {
+      display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 16px;
+    }
+    .pkg-include {
+      display: flex; align-items: center; gap: 4px; font-size: 0.78rem; color: #555;
+    }
+    .pkg-include i { color: var(--success); font-size: 0.7rem; }
+
+    .pkg-highlights {
+      display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px;
+    }
+    .pkg-highlight {
+      background: var(--bg-alt); padding: 3px 10px; border-radius: var(--radius-full);
+      font-size: 0.72rem; color: #555;
+    }
+
+    .pkg-card__footer {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      padding-top: 14px; border-top: 1px solid var(--bg-alt);
+    }
+    .pkg-price .old { text-decoration: line-through; color: #999; font-size: 0.82rem; }
+    .pkg-price .new {
+      font-size: 1.4rem; font-weight: 700; color: var(--primary); font-family: var(--font-head);
+    }
+    .pkg-price small { font-size: 0.72rem; color: #888; }
+    .pkg-price .savings {
+      font-size: 0.75rem; color: var(--success); font-weight: 600;
+    }
+
+    @media (max-width: 1024px) { .packages-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 768px) { .packages-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header id="navbar" class="navbar scrolled">
+    <div class="container navbar__inner">
+      <a href="../index.html" class="navbar__logo" style="color: var(--dark);">
+        <i class="fa-solid fa-plane-departure" style="color: var(--primary);"></i>
+        <span>Trip<span class="logo-highlight">Vista</span></span>
+      </a>
+      <nav class="navbar__links">
+        <a href="../index.html#hero" class="nav-link">Flights</a>
+        <a href="../index.html#hero" class="nav-link">Hotels</a>
+        <a href="../index.html#hero" class="nav-link">Trains</a>
+        <a href="../index.html#hero" class="nav-link">Buses</a>
+        <a href="../index.html#destinations" class="nav-link active">Holiday Packages</a>
+        <a href="../index.html#deals" class="nav-link">Deals</a>
+      </nav>
+      <div class="navbar__actions">
+        <button class="btn btn-outline" style="color: var(--primary); border-color: var(--primary);">Sign In</button>
+        <button class="btn btn-primary">Sign Up</button>
+      </div>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Toggle Menu"><span style="background:var(--dark)"></span><span style="background:var(--dark)"></span><span style="background:var(--dark)"></span></button>
+    </div>
+  </header>
+
+  <section class="page-header">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a> <span>/</span> <span>Holiday Packages</span>
+      </div>
+      <h1>🌴 Holiday Packages</h1>
+      <p>All-inclusive trips with flights, hotels, meals &amp; sightseeing — starting from ₹4,999</p>
+    </div>
+  </section>
+
+  <section class="packages-section">
+    <div class="container">
+      <div class="category-tabs">
+        <button class="cat-tab active">All</button>
+        <button class="cat-tab">Beaches</button>
+        <button class="cat-tab">Mountains</button>
+        <button class="cat-tab">Heritage</button>
+        <button class="cat-tab">International</button>
+        <button class="cat-tab">Honeymoon</button>
+        <button class="cat-tab">Family</button>
+      </div>
+
+      <div class="packages-grid">
+        <!-- Package 1: Goa -->
+        <div class="pkg-card">
+          <div class="pkg-card__img">
+            <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=600&q=80" alt="Goa Beach Package" loading="lazy" />
+            <span class="pkg-card__duration">3N / 4D</span>
+            <span class="pkg-card__type">Best Seller</span>
+          </div>
+          <div class="pkg-card__body">
+            <h3>Goa Beach Holiday</h3>
+            <div class="pkg-location"><i class="fa-solid fa-location-dot"></i> North &amp; South Goa</div>
+            <div class="pkg-includes">
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> Flights</span>
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> Hotel</span>
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> Breakfast</span>
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> Sightseeing</span>
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> Transfers</span>
+            </div>
+            <div class="pkg-highlights">
+              <span class="pkg-highlight">Water Sports</span>
+              <span class="pkg-highlight">Beach Party</span>
+              <span class="pkg-highlight">Cruise Dinner</span>
+            </div>
+            <div class="pkg-card__footer">
+              <div class="pkg-price">
+                <span class="old">₹9,999</span>
+                <div class="new">₹5,999 <small>/person</small></div>
+                <span class="savings">Save 40%</span>
+              </div>
+              <button class="btn btn-primary btn--sm">View Details</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Package 2: Manali -->
+        <div class="pkg-card">
+          <div class="pkg-card__img">
+            <img src="https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=600&q=80" alt="Manali Snow Package" loading="lazy" />
+            <span class="pkg-card__duration">4N / 5D</span>
+            <span class="pkg-card__type">Trending</span>
+          </div>
+          <div class="pkg-card__body">
+            <h3>Manali Snow Adventure</h3>
+            <div class="pkg-location"><i class="fa-solid fa-location-dot"></i> Manali &amp; Solang Valley</div>
+            <div class="pkg-includes">
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> Hotel</span>
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> All Meals</span>
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> Sightseeing</span>
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> Volvo Bus</span>
+            </div>
+            <div class="pkg-highlights">
+              <span class="pkg-highlight">Skiing</span>
+              <span class="pkg-highlight">Paragliding</span>
+              <span class="pkg-highlight">River Rafting</span>
+            </div>
+            <div class="pkg-card__footer">
+              <div class="pkg-price">
+                <span class="old">₹12,999</span>
+                <div class="new">₹7,499 <small>/person</small></div>
+                <span class="savings">Save 42%</span>
+              </div>
+              <button class="btn btn-primary btn--sm">View Details</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Package 3: Kerala -->
+        <div class="pkg-card">
+          <div class="pkg-card__img">
+            <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=600&q=80" alt="Kerala Backwaters Package" loading="lazy" />
+            <span class="pkg-card__duration">5N / 6D</span>
+            <span class="pkg-card__type">Premium</span>
+          </div>
+          <div class="pkg-card__body">
+            <h3>Kerala Backwaters &amp; Hills</h3>
+            <div class="pkg-location"><i class="fa-solid fa-location-dot"></i> Munnar, Alleppey, Kochi</div>
+            <div class="pkg-includes">
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> Flights</span>
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> Resort</span>
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> All Meals</span>
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> Houseboat</span>
+            </div>
+            <div class="pkg-highlights">
+              <span class="pkg-highlight">Houseboat Stay</span>
+              <span class="pkg-highlight">Tea Plantation</span>
+              <span class="pkg-highlight">Ayurveda Spa</span>
+            </div>
+            <div class="pkg-card__footer">
+              <div class="pkg-price">
+                <span class="old">₹18,999</span>
+                <div class="new">₹12,499 <small>/person</small></div>
+                <span class="savings">Save 34%</span>
+              </div>
+              <button class="btn btn-primary btn--sm">View Details</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Package 4: Rajasthan -->
+        <div class="pkg-card">
+          <div class="pkg-card__img">
+            <img src="https://images.unsplash.com/photo-1599661046289-e31897846e41?w=600&q=80" alt="Rajasthan Heritage Package" loading="lazy" />
+            <span class="pkg-card__duration">6N / 7D</span>
+            <span class="pkg-card__type">Heritage</span>
+          </div>
+          <div class="pkg-card__body">
+            <h3>Royal Rajasthan Circuit</h3>
+            <div class="pkg-location"><i class="fa-solid fa-location-dot"></i> Jaipur, Jodhpur, Udaipur, Jaisalmer</div>
+            <div class="pkg-includes">
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> Hotel</span>
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> Breakfast</span>
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> Sightseeing</span>
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> AC Cab</span>
+            </div>
+            <div class="pkg-highlights">
+              <span class="pkg-highlight">Desert Safari</span>
+              <span class="pkg-highlight">Palace Tour</span>
+              <span class="pkg-highlight">Cultural Show</span>
+            </div>
+            <div class="pkg-card__footer">
+              <div class="pkg-price">
+                <span class="old">₹22,999</span>
+                <div class="new">₹14,999 <small>/person</small></div>
+                <span class="savings">Save 35%</span>
+              </div>
+              <button class="btn btn-primary btn--sm">View Details</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Package 5: Dubai -->
+        <div class="pkg-card">
+          <div class="pkg-card__img">
+            <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=600&q=80" alt="Dubai Package" loading="lazy" />
+            <span class="pkg-card__duration">4N / 5D</span>
+            <span class="pkg-card__type">International</span>
+          </div>
+          <div class="pkg-card__body">
+            <h3>Dubai City &amp; Desert</h3>
+            <div class="pkg-location"><i class="fa-solid fa-location-dot"></i> Dubai, UAE</div>
+            <div class="pkg-includes">
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> Flights</span>
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> 4★ Hotel</span>
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> Breakfast</span>
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> Visa</span>
+            </div>
+            <div class="pkg-highlights">
+              <span class="pkg-highlight">Burj Khalifa</span>
+              <span class="pkg-highlight">Desert Safari</span>
+              <span class="pkg-highlight">Dubai Mall</span>
+            </div>
+            <div class="pkg-card__footer">
+              <div class="pkg-price">
+                <span class="old">₹45,999</span>
+                <div class="new">₹29,999 <small>/person</small></div>
+                <span class="savings">Save 35%</span>
+              </div>
+              <button class="btn btn-primary btn--sm">View Details</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Package 6: Bali -->
+        <div class="pkg-card">
+          <div class="pkg-card__img">
+            <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&q=80" alt="Bali Paradise Package" loading="lazy" />
+            <span class="pkg-card__duration">5N / 6D</span>
+            <span class="pkg-card__type">Honeymoon</span>
+          </div>
+          <div class="pkg-card__body">
+            <h3>Bali Paradise Getaway</h3>
+            <div class="pkg-location"><i class="fa-solid fa-location-dot"></i> Bali, Indonesia</div>
+            <div class="pkg-includes">
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> Flights</span>
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> Villa Stay</span>
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> All Meals</span>
+              <span class="pkg-include"><i class="fa-solid fa-check"></i> Spa</span>
+            </div>
+            <div class="pkg-highlights">
+              <span class="pkg-highlight">Ubud Rice Terraces</span>
+              <span class="pkg-highlight">Temple Tour</span>
+              <span class="pkg-highlight">Sunset Dinner</span>
+            </div>
+            <div class="pkg-card__footer">
+              <div class="pkg-price">
+                <span class="old">₹55,999</span>
+                <div class="new">₹38,999 <small>/person</small></div>
+                <span class="savings">Save 30%</span>
+              </div>
+              <button class="btn btn-primary btn--sm">View Details</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer__bottom">
+      <div class="container">
+        <p>&copy; 2025 TripVista. All rights reserved. Made with ❤️ in India</p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" id="scrollTopBtn" aria-label="Scroll to top"><i class="fa-solid fa-arrow-up"></i></button>
+  <script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bus Search Results — TripVista</title>
+  <meta name="description" content="Search and book bus tickets on TripVista. 1000+ operators, AC sleeper, Volvo multi-axle buses with live tracking and instant e-tickets." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .page-header {
+      background: linear-gradient(135deg, #E65100, #FF8F00);
+      color: #fff; padding: 100px 0 48px;
+    }
+    .page-header h1 { font-size: clamp(1.8rem, 3vw, 2.5rem); margin-bottom: 8px; }
+    .page-header p { color: rgba(255,255,255,0.9); }
+    .breadcrumb { display: flex; gap: 8px; font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 16px; }
+    .breadcrumb a { color: rgba(255,255,255,0.8); }
+    .breadcrumb a:hover { color: #fff; }
+
+    .results-layout {
+      display: grid; grid-template-columns: 280px 1fr; gap: 24px; padding: 40px 0 80px;
+    }
+    .filters {
+      background: #fff; border-radius: var(--radius-lg); padding: 24px;
+      box-shadow: var(--card-shadow); height: fit-content; position: sticky; top: 90px;
+    }
+    .filters h3 { font-size: 1.1rem; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--bg-alt); }
+    .filter-group { margin-bottom: 24px; }
+    .filter-group h4 { font-size: 0.88rem; font-weight: 600; color: var(--dark); margin-bottom: 12px; }
+    .filter-group label {
+      display: flex; align-items: center; gap: 8px; padding: 6px 0;
+      font-size: 0.88rem; color: #555; cursor: pointer;
+    }
+    .filter-group input[type="checkbox"] { accent-color: #E65100; width: 16px; height: 16px; }
+    .price-range { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: #666; }
+    .price-range input[type="range"] { flex: 1; accent-color: #E65100; }
+
+    .results-list { display: flex; flex-direction: column; gap: 16px; }
+
+    .sort-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .sort-btn {
+      padding: 8px 20px; border-radius: var(--radius-full); border: 1px solid var(--bg-alt);
+      background: #fff; font-family: var(--font-body); font-size: 0.85rem;
+      cursor: pointer; transition: var(--transition-fast); color: #666;
+    }
+    .sort-btn:hover, .sort-btn.active { background: #E65100; color: #fff; border-color: #E65100; }
+
+    .bus-card {
+      background: #fff; border-radius: var(--radius-lg); padding: 24px;
+      box-shadow: var(--card-shadow); display: grid;
+      grid-template-columns: 1.3fr 2fr 1fr; gap: 20px; align-items: center;
+      transition: var(--transition); border-left: 4px solid transparent;
+    }
+    .bus-card:hover { border-left-color: #E65100; box-shadow: var(--card-shadow-hover); transform: translateY(-2px); }
+
+    .bus-info { display: flex; flex-direction: column; gap: 4px; }
+    .bus-operator { font-weight: 700; font-size: 1rem; color: var(--dark); }
+    .bus-type-label { font-size: 0.78rem; color: #888; }
+    .bus-type-badge {
+      display: inline-block; padding: 3px 10px; border-radius: var(--radius-full);
+      font-size: 0.72rem; font-weight: 600; margin-top: 4px; width: fit-content;
+    }
+    .bus-type-badge--volvo { background: #EDE7F6; color: #4527A0; }
+    .bus-type-badge--ac { background: #E3F2FD; color: #1565C0; }
+    .bus-type-badge--nonac { background: #FFF3E0; color: #E65100; }
+    .bus-type-badge--sleeper { background: #F3E5F5; color: #7B1FA2; }
+
+    .bus-rating {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 8px; border-radius: var(--radius-sm);
+      font-size: 0.75rem; font-weight: 700; margin-top: 6px; width: fit-content;
+    }
+    .bus-rating--high { background: #E8F5E9; color: #2E7D32; }
+    .bus-rating--mid { background: #FFF8E1; color: #F57F17; }
+
+    .journey-info {
+      display: flex; align-items: center; gap: 16px; justify-content: center;
+    }
+    .time-block { text-align: center; }
+    .time { font-size: 1.3rem; font-weight: 700; font-family: var(--font-head); }
+    .city-name { font-size: 0.78rem; color: #888; }
+    .bus-path {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .bus-path .duration { font-size: 0.75rem; color: #E65100; font-weight: 600; }
+    .bus-path .line {
+      width: 100%; height: 2px; background: var(--bg-alt); position: relative;
+    }
+    .bus-path .line::after {
+      content: '🚌'; position: absolute; right: -4px; top: -10px; font-size: 0.9rem;
+    }
+
+    .price-block { text-align: right; display: flex; flex-direction: column; gap: 6px; }
+    .price-block .price {
+      font-size: 1.4rem; font-weight: 700; color: #E65100; font-family: var(--font-head);
+    }
+    .price-block small { font-size: 0.78rem; color: #888; }
+    .seats-left {
+      font-size: 0.75rem; color: #C62828; font-weight: 600;
+    }
+    .seats-left--plenty { color: #2E7D32; }
+
+    .amenities-row {
+      grid-column: 1 / -1; display: flex; gap: 12px; flex-wrap: wrap;
+      padding-top: 12px; border-top: 1px solid var(--bg-alt);
+    }
+    .amenity {
+      display: flex; align-items: center; gap: 4px; font-size: 0.75rem; color: #666;
+    }
+    .amenity i { color: #E65100; font-size: 0.8rem; }
+
+    @media (max-width: 1024px) { .results-layout { grid-template-columns: 1fr; } .filters { position: static; } }
+    @media (max-width: 768px) {
+      .bus-card { grid-template-columns: 1fr; gap: 16px; text-align: center; }
+      .price-block { text-align: center; align-items: center; }
+      .journey-info { flex-direction: column; }
+      .amenities-row { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <header id="navbar" class="navbar scrolled">
+    <div class="container navbar__inner">
+      <a href="../index.html" class="navbar__logo" style="color: var(--dark);">
+        <i class="fa-solid fa-plane-departure" style="color: var(--primary);"></i>
+        <span>Trip<span class="logo-highlight">Vista</span></span>
+      </a>
+      <nav class="navbar__links">
+        <a href="../index.html#hero" class="nav-link" data-tab="flights">Flights</a>
+        <a href="../index.html#hero" class="nav-link" data-tab="hotels">Hotels</a>
+        <a href="../index.html#hero" class="nav-link" data-tab="trains">Trains</a>
+        <a href="../index.html#hero" class="nav-link active" data-tab="buses">Buses</a>
+        <a href="../index.html#destinations" class="nav-link">Holiday Packages</a>
+        <a href="../index.html#deals" class="nav-link">Deals</a>
+      </nav>
+      <div class="navbar__actions">
+        <button class="btn btn-outline" style="color: var(--primary); border-color: var(--primary);">Sign In</button>
+        <button class="btn btn-primary">Sign Up</button>
+      </div>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Toggle Menu"><span style="background:var(--dark)"></span><span style="background:var(--dark)"></span><span style="background:var(--dark)"></span></button>
+    </div>
+  </header>
+
+  <section class="page-header">
+    <div class="container">
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a> <span>/</span> <span>Bus Search Results</span>
+      </div>
+      <h1><i class="fa-solid fa-bus" style="margin-right: 10px;"></i>Buses: Pune → Mumbai</h1>
+      <p>Showing 6 buses for Sat, 25 Mar 2026 • All Types</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="results-layout">
+      <aside class="filters">
+        <h3><i class="fa-solid fa-filter"></i> Filters</h3>
+        <div class="filter-group">
+          <h4>Price Range</h4>
+          <div class="price-range">
+            <span>₹200</span>
+            <input type="range" min="200" max="3000" value="2000" />
+            <span>₹3,000</span>
+          </div>
+        </div>
+        <div class="filter-group">
+          <h4>Bus Type</h4>
+          <label><input type="checkbox" checked /> Volvo Multi-Axle</label>
+          <label><input type="checkbox" checked /> AC Sleeper</label>
+          <label><input type="checkbox" checked /> AC Seater</label>
+          <label><input type="checkbox" /> Non-AC Sleeper</label>
+          <label><input type="checkbox" /> Non-AC Seater</label>
+        </div>
+        <div class="filter-group">
+          <h4>Departure Time</h4>
+          <label><input type="checkbox" /> Morning (6am–12pm)</label>
+          <label><input type="checkbox" checked /> Afternoon (12pm–6pm)</label>
+          <label><input type="checkbox" checked /> Evening (6pm–12am)</label>
+          <label><input type="checkbox" checked /> Night (12am–6am)</label>
+        </div>
+        <div class="filter-group">
+          <h4>Operator</h4>
+          <label><input type="checkbox" checked /> Neeta Travels</label>
+          <label><input type="checkbox" checked /> MSRTC Shivneri</label>
+          <label><input type="checkbox" checked /> VRL Travels</label>
+          <label><input type="checkbox" checked /> Purple Travels</label>
+          <label><input type="checkbox" /> Konduskar Travels</label>
+        </div>
+        <div class="filter-group">
+          <h4>Amenities</h4>
+          <label><input type="checkbox" checked /> WiFi</label>
+          <label><input type="checkbox" /> Charging Point</label>
+          <label><input type="checkbox" /> Blanket</label>
+          <label><input type="checkbox" checked /> Live Tracking</label>
+        </div>
+      </aside>
+
+      <div>
+        <div class="sort-bar">
+          <button class="sort-btn active">Departure</button>
+          <button class="sort-btn">Duration</button>
+          <button class="sort-btn">Price (Low)</button>
+          <button class="sort-btn">Rating</button>
+        </div>
+
+        <div class="results-list">
+          <!-- Bus 1 -->
+          <div class="bus-card">
+            <div class="bus-info">
+              <span class="bus-operator">MSRTC Shivneri</span>
+              <span class="bus-type-label">Volvo AC Semi-Sleeper</span>
+              <span class="bus-type-badge bus-type-badge--volvo">Volvo</span>
+              <span class="bus-rating bus-rating--high"><i class="fa-solid fa-star"></i> 4.5 (2.1k)</span>
+            </div>
+            <div class="journey-info">
+              <div class="time-block">
+                <div class="time">06:00</div>
+                <div class="city-name">Pune (Shivajinagar)</div>
+              </div>
+              <div class="bus-path">
+                <span class="duration">3h 30m</span>
+                <div class="line"></div>
+              </div>
+              <div class="time-block">
+                <div class="time">09:30</div>
+                <div class="city-name">Mumbai (Dadar)</div>
+              </div>
+            </div>
+            <div class="price-block">
+              <div class="price">₹499</div>
+              <small>per seat</small>
+              <span class="seats-left seats-left--plenty">22 Seats Left</span>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+            <div class="amenities-row">
+              <span class="amenity"><i class="fa-solid fa-wifi"></i> WiFi</span>
+              <span class="amenity"><i class="fa-solid fa-plug"></i> Charging</span>
+              <span class="amenity"><i class="fa-solid fa-location-dot"></i> Live Tracking</span>
+              <span class="amenity"><i class="fa-solid fa-water"></i> Water Bottle</span>
+            </div>
+          </div>
+
+          <!-- Bus 2 -->
+          <div class="bus-card">
+            <div class="bus-info">
+              <span class="bus-operator">Neeta Travels</span>
+              <span class="bus-type-label">Volvo Multi-Axle AC Sleeper</span>
+              <span class="bus-type-badge bus-type-badge--volvo">Volvo Multi-Axle</span>
+              <span class="bus-rating bus-rating--high"><i class="fa-solid fa-star"></i> 4.3 (1.8k)</span>
+            </div>
+            <div class="journey-info">
+              <div class="time-block">
+                <div class="time">22:00</div>
+                <div class="city-name">Pune (Wakad)</div>
+              </div>
+              <div class="bus-path">
+                <span class="duration">4h 00m</span>
+                <div class="line"></div>
+              </div>
+              <div class="time-block">
+                <div class="time">02:00</div>
+                <div class="city-name">Mumbai (Borivali)</div>
+              </div>
+            </div>
+            <div class="price-block">
+              <div class="price">₹899</div>
+              <small>per seat</small>
+              <span class="seats-left">8 Seats Left</span>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+            <div class="amenities-row">
+              <span class="amenity"><i class="fa-solid fa-wifi"></i> WiFi</span>
+              <span class="amenity"><i class="fa-solid fa-plug"></i> Charging</span>
+              <span class="amenity"><i class="fa-solid fa-blanket"></i> Blanket</span>
+              <span class="amenity"><i class="fa-solid fa-location-dot"></i> Live Tracking</span>
+              <span class="amenity"><i class="fa-solid fa-water"></i> Water Bottle</span>
+            </div>
+          </div>
+
+          <!-- Bus 3 -->
+          <div class="bus-card">
+            <div class="bus-info">
+              <span class="bus-operator">VRL Travels</span>
+              <span class="bus-type-label">AC Sleeper (2+1)</span>
+              <span class="bus-type-badge bus-type-badge--ac">AC Sleeper</span>
+              <span class="bus-rating bus-rating--mid"><i class="fa-solid fa-star"></i> 3.9 (945)</span>
+            </div>
+            <div class="journey-info">
+              <div class="time-block">
+                <div class="time">21:30</div>
+                <div class="city-name">Pune (Swargate)</div>
+              </div>
+              <div class="bus-path">
+                <span class="duration">4h 15m</span>
+                <div class="line"></div>
+              </div>
+              <div class="time-block">
+                <div class="time">01:45</div>
+                <div class="city-name">Mumbai (Vashi)</div>
+              </div>
+            </div>
+            <div class="price-block">
+              <div class="price">₹749</div>
+              <small>per seat</small>
+              <span class="seats-left seats-left--plenty">15 Seats Left</span>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+            <div class="amenities-row">
+              <span class="amenity"><i class="fa-solid fa-plug"></i> Charging</span>
+              <span class="amenity"><i class="fa-solid fa-location-dot"></i> Live Tracking</span>
+            </div>
+          </div>
+
+          <!-- Bus 4 -->
+          <div class="bus-card">
+            <div class="bus-info">
+              <span class="bus-operator">Purple Travels</span>
+              <span class="bus-type-label">Volvo AC Multi-Axle Seater</span>
+              <span class="bus-type-badge bus-type-badge--volvo">Volvo</span>
+              <span class="bus-rating bus-rating--high"><i class="fa-solid fa-star"></i> 4.2 (1.3k)</span>
+            </div>
+            <div class="journey-info">
+              <div class="time-block">
+                <div class="time">07:30</div>
+                <div class="city-name">Pune (Hinjawadi)</div>
+              </div>
+              <div class="bus-path">
+                <span class="duration">3h 45m</span>
+                <div class="line"></div>
+              </div>
+              <div class="time-block">
+                <div class="time">11:15</div>
+                <div class="city-name">Mumbai (Andheri)</div>
+              </div>
+            </div>
+            <div class="price-block">
+              <div class="price">₹549</div>
+              <small>per seat</small>
+              <span class="seats-left seats-left--plenty">30 Seats Left</span>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+            <div class="amenities-row">
+              <span class="amenity"><i class="fa-solid fa-wifi"></i> WiFi</span>
+              <span class="amenity"><i class="fa-solid fa-plug"></i> Charging</span>
+              <span class="amenity"><i class="fa-solid fa-water"></i> Water Bottle</span>
+            </div>
+          </div>
+
+          <!-- Bus 5 -->
+          <div class="bus-card">
+            <div class="bus-info">
+              <span class="bus-operator">Konduskar Travels</span>
+              <span class="bus-type-label">Non-AC Sleeper (2+1)</span>
+              <span class="bus-type-badge bus-type-badge--nonac">Non-AC</span>
+              <span class="bus-rating bus-rating--mid"><i class="fa-solid fa-star"></i> 3.7 (680)</span>
+            </div>
+            <div class="journey-info">
+              <div class="time-block">
+                <div class="time">23:00</div>
+                <div class="city-name">Pune (Katraj)</div>
+              </div>
+              <div class="bus-path">
+                <span class="duration">5h 00m</span>
+                <div class="line"></div>
+              </div>
+              <div class="time-block">
+                <div class="time">04:00</div>
+                <div class="city-name">Mumbai (Panvel)</div>
+              </div>
+            </div>
+            <div class="price-block">
+              <div class="price">₹399</div>
+              <small>per seat</small>
+              <span class="seats-left seats-left--plenty">18 Seats Left</span>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+            <div class="amenities-row">
+              <span class="amenity"><i class="fa-solid fa-location-dot"></i> Live Tracking</span>
+            </div>
+          </div>
+
+          <!-- Bus 6 -->
+          <div class="bus-card">
+            <div class="bus-info">
+              <span class="bus-operator">MSRTC Ashwamedh</span>
+              <span class="bus-type-label">AC Seater Push-Back</span>
+              <span class="bus-type-badge bus-type-badge--ac">AC Seater</span>
+              <span class="bus-rating bus-rating--high"><i class="fa-solid fa-star"></i> 4.1 (1.5k)</span>
+            </div>
+            <div class="journey-info">
+              <div class="time-block">
+                <div class="time">14:00</div>
+                <div class="city-name">Pune (Shivajinagar)</div>
+              </div>
+              <div class="bus-path">
+                <span class="duration">3h 45m</span>
+                <div class="line"></div>
+              </div>
+              <div class="time-block">
+                <div class="time">17:45</div>
+                <div class="city-name">Mumbai (Dadar)</div>
+              </div>
+            </div>
+            <div class="price-block">
+              <div class="price">₹449</div>
+              <small>per seat</small>
+              <span class="seats-left seats-left--plenty">25 Seats Left</span>
+              <button class="btn btn-primary btn--sm">Book Now</button>
+            </div>
+            <div class="amenities-row">
+              <span class="amenity"><i class="fa-solid fa-plug"></i> Charging</span>
+              <span class="amenity"><i class="fa-solid fa-location-dot"></i> Live Tracking</span>
+              <span class="amenity"><i class="fa-solid fa-water"></i> Water Bottle</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer__bottom">
+      <div class="container">
+        <p>&copy; 2025 TripVista. All rights reserved. Made with ❤️ in India</p>
+      </div>
+    </div>
+  </footer>
+
+  <button class="scroll-top" id="scrollTopBtn" aria-label="Scroll to top"><i class="fa-solid fa-arrow-up"></i></button>
+  <script src="../js/main.js"></script>
+</body>
+</html>
