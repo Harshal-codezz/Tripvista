@@ -150,28 +150,4 @@ Potential enhancements for the project include:
 - Adding filtering, sorting, and dynamic pricing modules.
 - Converting the static UI into a full-stack travel platform.
 
-## License
 
-Add your preferred license here, for example:
-
-```text
-MIT License
-```
-
-If you have not chosen a license yet, create a `LICENSE` file before publishing the repository.
-
-## Contact
-
-If you plan to make this project public, consider adding:
-
-- Maintainer name
-- Email address
-- GitHub profile link
-
-***
-
-If you want, this README can also be tailored further for:
-
-- a **pure HTML/CSS/JS project**,
-- a **college mini project submission**,
-- or a **professional GitHub portfolio project**.
